@@ -17,7 +17,7 @@ export default function Popup<ContentProps extends object>(props: PopupProps<Con
         if (!props.scroll) return;
         document.body.style.overflow = "hidden";
         return () => { document.body.style.overflow = "auto"; };
-    });
+    }, [props.scroll]);
 
     useEffect(() => {
         if (!props.blur) return;
@@ -27,7 +27,7 @@ export default function Popup<ContentProps extends object>(props: PopupProps<Con
         }
         window.addEventListener('mousedown', handleClick);
         return () => window.removeEventListener('mousedown', handleClick);
-    });
+    }, [props.blur, popupContainer]);
 
     useEffect(() => {
         const container = document.createElement('div');
@@ -44,7 +44,7 @@ export default function Popup<ContentProps extends object>(props: PopupProps<Con
         setPopupContainer(container);
         document.body.appendChild(container);
         return () => { document.body.removeChild(container); };
-    }, []);
+    }, [props.blur, props.scroll, props.noPointer, props.classList]);
 
     return popupContainer ? ReactDOM.createPortal(getPopupElement(), popupContainer) : <div></div>;
 }
