@@ -1,0 +1,321 @@
+.background {
+  position: relative;
+  z-index: -1;
+  height: 100dvh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+
+  &__waves {
+    position: absolute;
+    width: 100%;
+    top: 100px;
+    height: auto;
+  }
+
+  &__shape {
+    position: absolute;
+    width: 1000px;
+    height: 1000px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      #003498 0%,
+      rgba(0, 52, 152, 0) 100%
+    );
+    z-index: 1;
+    filter: blur(140px);
+  }
+
+  &__cosmo_object {
+    position: absolute;
+  }
+
+  &__planet_orange {
+    top: 54px;
+    left: 154px;
+  }
+  &__planet_purple {
+    top: 307px;
+    left: 76px;
+  }
+  &__planet_blue {
+    top: 83px;
+    right: 67px;
+  }
+  &__comet {
+    top: 280px;
+    right: 200px;
+  }
+  &__planet_light_blue_with_belt {
+    top: 530px;
+    left: 162px;
+  }
+  &__planet_orange_purple {
+    top: 400px;
+    left: 378px;
+  }
+  &__planet_purple_with_belt {
+    top: 457px;
+    right: 125px;
+  }
+
+  &__crumb1 {
+    top: 87px;
+    left: 80px;
+    opacity: 0.4;
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb2 {
+    top: 679px;
+    left: 62px;
+    opacity: 0.4;
+    transform: scale(calc(13 / 7));
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb3 {
+    top: 496px;
+    left: 120px;
+    transform: scale(calc(17 / 28));
+    path {
+      fill: #ffc700;
+    }
+  }
+  &__crumb4 {
+    top: 341px;
+    left: 224px;
+    opacity: 0.3;
+    transform: scale(calc(25 / 28));
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb5 {
+    top: 182px;
+    left: 307px;
+    transform: scale(calc(12 / 7));
+    path {
+      fill: #18c8d9;
+    }
+  }
+  &__crumb6 {
+    top: 682px;
+    left: 332px;
+    opacity: 0.4;
+    path {
+      fill: #18c8d9;
+    }
+  }
+  &__crumb7 {
+    top: 633px;
+    left: 412px;
+    opacity: 0.5;
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb8 {
+    top: 35px;
+    left: 445px;
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb9 {
+    top: 315px;
+    left: 495px;
+    path {
+      fill: #1ccadb;
+    }
+  }
+  &__crumb10 {
+    top: 80px;
+    left: 520px;
+    opacity: 0.5;
+    transform: scale(calc(15 / 28));
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb11 {
+    top: 520px;
+    left: 530px;
+    opacity: 0.4;
+    transform: scale(calc(13 / 7));
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb12 {
+    top: 46px;
+    right: calc(1440px - 900px);
+    transform: scale(calc(16 / 28));
+    path {
+      fill: #ffc700;
+    }
+  }
+  &__crumb13 {
+    top: 451px;
+    right: calc(1440px - 935px);
+    opacity: 0.2;
+    transform: scale(calc(13 / 7));
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb14 {
+    top: 580px;
+    right: calc(1440px - 1030px);
+    opacity: 0.4;
+    transform: scale(calc(8 / 7));
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb15 {
+    top: 79px;
+    right: calc(1440px - 1075px);
+    transform: scale(calc(11 / 7));
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb16 {
+    top: 512px;
+    right: calc(1440px - 1109px);
+    transform: scale(calc(7 / 7));
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb17 {
+    top: 135px;
+    right: calc(1440px - 1134px);
+    transform: scale(calc(5 / 7));
+    path {
+      fill: #1accd9;
+    }
+  }
+  &__crumb18 {
+    top: 38px;
+    right: calc(1440px - 1208px);
+    transform: scale(calc(11 / 7));
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb19 {
+    top: 314px;
+    right: calc(1440px - 1248px);
+    transform: scale(calc(7 / 7));
+    path {
+      fill: #fec601;
+    }
+  }
+  &__crumb20 {
+    top: 660px;
+    right: calc(1440px - 1263px);
+    transform: scale(calc(28 / 28));
+    path {
+      fill: #ffffff;
+    }
+  }
+  &__crumb21 {
+    top: 378px;
+    right: calc(1440px - 1316px);
+    transform: scale(calc(20 / 28));
+    path {
+      fill: #ffffff;
+    }
+  }
+}
+
+.pos_animated {
+  animation-duration: 5s;
+  animation-name: positioning;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+
+  &.pos_animated_less {
+    animation-duration: 3s;
+    animation-name: positioning-less;
+  }
+
+  @keyframes positioning {
+    0% {
+      transform: translateY(0) rotate(0);
+    }
+
+    50% {
+      transform: translateY(-30px) rotate(-25deg);
+    }
+
+    100% {
+      transform: translateY(0) rotate(0);
+    }
+  }
+
+  @keyframes positioning-less {
+    0% {
+      transform: translateY(0) rotate(0);
+    }
+
+    50% {
+      transform: translateY(-20px) rotate(-25deg);
+    }
+
+    100% {
+      transform: translateY(0) rotate(0);
+    }
+  }
+}
+
+.fly_animation {
+  opacity: 0;
+  animation: fly 2s ease-in-out infinite, opacify 2s ease-in-out infinite,
+    delay-between-animations 8s ease-in-out infinite;
+  @keyframes fly {
+    0% {
+      transform: translate(0, 0) rotate(30deg) scale(0.02);
+    }
+
+    100% {
+      transform: translate(min(-8vw, -150px), 50px) rotate(0deg) scale(1);
+    }
+  }
+
+  @keyframes delay-between-animations {
+    0% {
+      visibility: visible;
+    }
+
+    25% {
+      visibility: visible;
+    }
+
+    25.1% {
+      visibility: hidden;
+    }
+
+    100% {
+      visibility: hidden;
+    }
+  }
+
+  @keyframes opacify {
+    70% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+}

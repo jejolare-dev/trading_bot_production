@@ -1,0 +1,41 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+a {
+  text-decoration: none;
+}
+
+.nofont {
+  font-family: sans-serif;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar {
+  background-color: var(--black-50);
+  width: 4px;
+  height: 4px;
+  border-radius: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--blue);
+}

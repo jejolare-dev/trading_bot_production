@@ -1,0 +1,50 @@
+.card {
+  padding: 24px;
+  width: 355px;
+  border-radius: 12px;
+  border-bottom: 1px solid var(--black-50);
+  background-color: var(--black-100);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  &__title {
+    font-size: 36px;
+    font-weight: 700;
+  }
+
+  &__desc {
+    margin-top: 8px;
+    margin-bottom: 24px;
+    color: var(--gray);
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  &__info {
+    transition: 0.3s opacity ease;
+    cursor: pointer;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--blue);
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    span {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    svg {
+      margin-right: 6px;
+    }
+  }
+}

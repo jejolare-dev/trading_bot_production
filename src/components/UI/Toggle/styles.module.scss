@@ -1,0 +1,28 @@
+.toggleContainer {
+  width: 42px;
+  height: 24px;
+  background-color: #ffffff1a;
+  border-radius: 34px;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggleCircle {
+  width: 20px;
+  height: 20px;
+  background-color: var(--white);
+  border-radius: 50%;
+  transition: 0.3s all ease;
+}
+
+.toggleOff .toggleCircle {
+  transform: translateX(0);
+}
+
+.toggleOn .toggleCircle {
+  transform: translateX(13px);
+  background-color: var(--green);
+}
