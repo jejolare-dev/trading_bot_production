@@ -144,9 +144,22 @@
         align-items: center;
         gap: 4px;
 
-        p {
+        &.price {
+          margin-top: 14px;
+        }
+
+        input[type="number"] {
+          outline: none;
+          border: none;
+          background-color: transparent;
           font-size: 20px;
           font-weight: 500;
+          color: var(--white);
+          max-width: 100px;
+
+          &::placeholder {
+            color: var(--gray);
+          }
         }
 
         span {
