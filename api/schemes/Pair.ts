@@ -1,5 +1,4 @@
 import { Model, DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
 import sequelize from "../sequelize";
 
 class Pair extends Model {
@@ -19,9 +18,9 @@ class Pair extends Model {
 
 Pair.init({
     id: { 
-        type: DataTypes.STRING, 
+        type: DataTypes.UUID, 
         primaryKey: true, 
-        defaultValue: () => uuidv4()
+        defaultValue: DataTypes.UUIDV4
     },
     orderType: {
         type: DataTypes.STRING,
