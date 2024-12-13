@@ -3,40 +3,45 @@ import dotenv from "dotenv";
 import validateWallet from "../utils/validateWallet.js";
 import AuthData from "../interfaces/bodies/user/AuthData.js";
 import userModel from "../models/User.js";
+import User from "../schemes/User.js";
 
 dotenv.config();
 
 class AuthService {
+    private generateToken(payload: AuthData & { id: string }) {
+        const { id, address, alias, signature, message } = payload;
+
+        return jwt.sign({ id, address, alias, signature, message }, process.env.JWT_SECRET || "", 
+            { expiresIn: "24h" }
+        );
+    }
+
     async auth(userData: AuthData) {
         const { address, alias, signature, message } = userData;
 
         if (!address || !alias || !signature || !message) {
-            return { success: false, data: "Invalid auth data" };
+            return { success: false, data: "Missing required fields: address, alias, signature, or message." };
         }
 
-        const dataValid = !!(userData && userData.address && alias && (await validateWallet(userData)));
+        const isValidWallet = await validateWallet(userData);
 
-        if (!dataValid) {
-            return { success: false, data: "Invalid auth data" };
+        if (!isValidWallet) {
+            return { success: false, data: "Wallet validation failed. Invalid signature or message." };
         } 
         
-        const userRow = await userModel.getUserRow(userData.address);
+        const existingUser = await userModel.getUserByAddress(userData.address);
 
-        if (userRow) {
-            const token = jwt.sign({ ...userData }, process.env.JWT_SECRET || "", { expiresIn: "24h" });
-
-            return { success: true, data: token };
+        if (existingUser) {
+            return { success: true, data: this.generateToken({ id: existingUser.id, ...userData })};
         }
 
-        const newUserRow = await userModel.createUser(userData.alias, userData.address);
+        const newUser = await userModel.createUser(alias, address);
 
-        if (!newUserRow) {
-            return { success: false, data: "User is not created" };
+        if (!newUser) {
+            return { success: false, data: "Failed to create a new user." };
         }
-        
-        const token = jwt.sign({ ...userData }, process.env.JWT_SECRET || "", { expiresIn: "24h" });
 
-        return { success: true, data: token };
+        return { success: true, data: this.generateToken({ id: newUser.id, ...userData })};
     }
 }
 

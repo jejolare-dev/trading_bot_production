@@ -2,7 +2,11 @@ import AuthData from "../interfaces/bodies/user/AuthData";
 import User from "../schemes/User";
 
 class UserModel {
-    async getUserRow(address: string) {
+    async getUserById(id: string) {
+        return await User.findByPk(id);
+    }
+
+    async getUserByAddress(address: string) {
         return await User.findOne({ where: { address } });
     }
 

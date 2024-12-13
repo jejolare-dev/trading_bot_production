@@ -1,6 +1,6 @@
 import UserData from "../../common/UserData";
 
 export default interface DeletePairBody {
-    id: number,
+    id: string,
     userData: UserData
 }

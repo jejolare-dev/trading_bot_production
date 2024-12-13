@@ -8,49 +8,41 @@ import Pair from "../schemes/Pair";
 import userService from "./User";
 
 class PairModel {
-    async getPairRow(id: number) {
-        return await Pair.findOne({ where: { id } });
+    async getPairById(id: string) {
+        return await Pair.findByPk(id);
     }
 
-    async getUserPairs(id: number) {
-        return await Pair.findAll({ where: { user_id: id }});
+    async getUserPairs(id: string) {
+        return await Pair.findAll({ where: { userId: id }});
     }
 
-    async createPair(pairData: PairData, id: number) {
+    async createPair(pairData: PairData, id: string) {
         return await Pair.create({
-                user_id: id,
-                order_type: pairData.orderType,
+                userId: id,
+                orderType: pairData.orderType,
                 type: pairData.type,
                 price: pairData.price,
                 amount: pairData.amount,
                 active: true,
-                base_currency: pairData.baseCurrency,
-                quote_currency: pairData.quoteCurrency
+                baseCurrency: pairData.baseCurrency,
+                quoteCurrency: pairData.quoteCurrency
             });
     }
 
-    async editPair(updateFields: Partial<Omit<PairRow, 'id'>>, id: number) {
-        const pairRow = await this.getPairRow(id);
+    async editPair(updateFields: Partial<Omit<PairRow, 'id'>>, id: string) {
+        const existingPair = await this.getPairById(id);
 
-        return await pairRow?.update({
-            order_type: updateFields?.orderType ?? pairRow.order_type,
-            type: updateFields?.type ?? pairRow.type,
-            price: updateFields?.price ?? pairRow.price,
-            amount: updateFields?.amount ?? pairRow.amount,
-            active: updateFields?.active ?? pairRow.active,
-            base_currency: updateFields?.baseCurrency ?? pairRow.base_currency,
-            quote_currency: updateFields?.quoteCurrency ?? pairRow.quote_currency
-        });  
+        return await existingPair?.update(updateFields);  
     }
 
-    async deletePair(id: number) {
-        const pairRow = await this.getPairRow(id);
+    async deletePair(id: string) {
+        const pairRow = await this.getPairById(id);
             
         await pairRow?.destroy();
     }
 
-    async toggleActivation(id: number, active: boolean) {
-        const pairRow = await this.getPairRow(id);
+    async toggleActivation(id: string, active: boolean) {
+        const pairRow = await this.getPairById(id);
             
         return pairRow?.update({ active });
     }

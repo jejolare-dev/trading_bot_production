@@ -1,9 +1,10 @@
 import { Model, DataTypes } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
 import sequelize from "../sequelize";
 import Pair from "./Pair";
 
 class User extends Model {
-    declare readonly id: number;
+    declare readonly id: string;
     declare alias: string;
     declare address: string;
 
@@ -12,7 +13,11 @@ class User extends Model {
 }
 
 User.init({
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    id: { 
+        type: DataTypes.STRING, 
+        primaryKey: true, 
+        defaultValue: () => uuidv4()
+    },
     alias: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -31,7 +36,7 @@ User.init({
 
 
 User.hasMany(Pair, {
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
     as: 'pairs',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

@@ -7,13 +7,13 @@ import userModel from "../models/User";
 
 class PairService {
     async getUserPairs(userData: UserData) {
-        const userRow = await userModel.getUserRow(userData.address);
+        const existingUser = await userModel.getUserById(userData.id);
 
-        if (!userRow) {
-            return { success: false, data: "User not found" };
+        if (!existingUser) {
+            return { success: false, data: "User not found." };
         }
 
-        const pairs = await pairModel.getUserPairs(userRow.id);          
+        const pairs = await pairModel.getUserPairs(existingUser.id);          
 
         return { success: true, data: pairs };
     }
@@ -21,17 +21,16 @@ class PairService {
     async createPair(body: CreatePairBody) {
         const pairData = body.pairData;
         const userData = body.userData;
+        const existingUser = await userModel.getUserById(userData.id);
 
-        const userRow = await userModel.getUserRow(userData.address);
-
-        if (!userRow) {
-            return { success: false, data: "User not found" };
+        if (!existingUser) {
+            return { success: false, data: "User not found." };
         }
 
-        const newPair = await pairModel.createPair(pairData, userRow.id);
+        const newPair = await pairModel.createPair(pairData, existingUser.id);
 
         if (!newPair) {
-            return { success: false, data: "Pair is not created" };
+            return { success: false, data: "Failed to create a new pair." };
         }           
 
         return { success: true };
@@ -42,26 +41,26 @@ class PairService {
         const { id, ...updateFields } = pairData;
         const userData = body.userData;
 
-        const pairRow = await pairModel.getPairRow(id);
+        const existingPair = await pairModel.getPairById(id);
 
-        if (!pairRow) {
-            return { success: false, data: "Pair not found" };
+        if (!existingPair) {
+            return { success: false, data: "Pair not found." };
         }
 
-        const userRow = await userModel.getUserRow(userData.address);
+        const existingUser = await userModel.getUserById(userData.id);
 
-        if (!userRow) {
-            return { success: false, data: "User not found" };
+        if (!existingUser) {
+            return { success: false, data: "User not found." };
         }
 
-        if (userRow.id !== pairRow.user_id) {
-            return { success: false, data: "User cannot update this pair" };
+        if (existingUser.id !== existingPair.userId) {
+            return { success: false, data: "User cannot update this pair." };
         }
 
-        const updatedPair = await pairModel.editPair(updateFields, userRow.id);  
+        const updatedPair = await pairModel.editPair(updateFields, id);  
         
         if (!updatedPair) {
-            return { success: false, data: "Pair is not updated" };
+            return { success: false, data: "Failed to update a pair." };
         }
 
         return { success: true };
@@ -69,48 +68,48 @@ class PairService {
 
     async deletePair(body: DeletePairBody) {
         const { id, userData } = body;
-        const pairRow = await pairModel.getPairRow(id);
+        const existingPair = await pairModel.getPairById(id);
 
-        if (!pairRow) {
-            return { success: false, data: "Pair not found" };
+        if (!existingPair) {
+            return { success: false, data: "Pair not found." };
         }
 
-        const userRow = await userModel.getUserRow(userData.address);
+        const existingUser = await userModel.getUserById(userData.id);
 
-        if (!userRow) {
+        if (!existingUser) {
             return { success: false, data: "User not found" };
         }
 
-        if (userRow.id !== pairRow.user_id) {
-            return { success: false, data: "User cannot delete this pair" };
+        if (existingUser.id !== existingPair.userId) {
+            return { success: false, data: "User cannot delete this pair." };
         }
 
-        const isDeleted = await pairModel.deletePair(id);
+        await pairModel.deletePair(id);
 
         return { success: true };
     }
 
-    async toggleActivation(userData: UserData, id: number, active: boolean) {
-        const pairRow = await pairModel.getPairRow(id);
+    async toggleActivation(userData: UserData, id: string, active: boolean) {
+        const existingPair = await pairModel.getPairById(id);
     
-        if (!pairRow) {
-            return { success: false, data: "Pair not found" };
+        if (!existingPair) {
+            return { success: false, data: "Pair not found." };
         }
 
-        const userRow = await userModel.getUserRow(userData.address);
+        const existingUser = await userModel.getUserById(userData.id);
 
-        if (!userRow) {
+        if (!existingUser) {
             return { success: false, data: "User not found" };
         }
 
-        if (userRow.id !== pairRow.user_id) {
-            return { success: false, data: "User cannot update this pair" };
+        if (existingUser.id !== existingPair.userId) {
+            return { success: false, data: "User cannot update this pair." };
         }
 
-        const isUpdated = await pairModel.toggleActivation(id, active);
+        const isPairUpdated = await pairModel.toggleActivation(id, active);
 
-        if (!isUpdated) {
-            return { success: false, data: "Pair is not updated" };
+        if (!isPairUpdated) {
+            return { success: false, data: "Failed to update pair." };
         }
 
         return { success: true };

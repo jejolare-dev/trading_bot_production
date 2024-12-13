@@ -1,24 +1,29 @@
 import { Model, DataTypes } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
 import sequelize from "../sequelize";
 
 class Pair extends Model {
-    declare readonly id: number;
-    declare order_type: string;
+    declare readonly id: string;
+    declare orderType: string;
     declare type: string;
     declare amount: number;
     declare price: number;
     declare active: boolean;
-    declare user_id: number;
-    declare base_currency: string;
-    declare quote_currency: string;
+    declare userId: string;
+    declare baseCurrency: string;
+    declare quoteCurrency: string;
 
     declare readonly createdAt: Date;
     declare readonly updatedAt: Date;
 }
 
 Pair.init({
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    order_type: {
+    id: { 
+        type: DataTypes.STRING, 
+        primaryKey: true, 
+        defaultValue: () => uuidv4()
+    },
+    orderType: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -39,28 +44,18 @@ Pair.init({
         allowNull: false,
         defaultValue: false
     },
-    user_id: {
-        type: DataTypes.INTEGER,
+    userId: {
+        type: DataTypes.STRING,
         allowNull: false
     },
-    base_currency: {
+    baseCurrency: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    quote_currency: {
+    quoteCurrency: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
-    }
 }, {
     sequelize,
     modelName: 'pairs',

@@ -3,6 +3,6 @@ import PairRow from "../../database/PairRow";
 
 
 export default interface EditPairBody {
-    pairData: { id: number } & Partial<Omit<PairRow, 'id'>>,
+    pairData: { id: string } & Partial<Omit<PairRow, 'id'>>,
     userData: UserData
 }
