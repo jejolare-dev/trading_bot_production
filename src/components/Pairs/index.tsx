@@ -11,7 +11,7 @@ import DelIcon from "@/assets/img/icons/delete.svg";
 import Toggle from "../UI/Toggle";
 import Button from "../UI/Button";
 import Pair from "@/interfaces/Pair";
-import { deletePair, togglePairActivation } from "@/utils/methods";
+import PairApi from "@/api/PairApi";
 
 // Filters data
 const pairFilters: OptionType[] = [
@@ -46,7 +46,7 @@ const Pairs = ({
     // Toggle pair activity
     const onTogglePairActivity = async (id: string, active: boolean) => {
         try {
-            const res = await togglePairActivation(id, active);
+            const res = await PairApi.togglePairActivation(id, active);
 
             if (res.success) {
                 const changedPair = pairs?.map(pair =>
@@ -60,7 +60,7 @@ const Pairs = ({
 
     const onPairDelete = async (id: string) => {
         try {
-            const res = await deletePair(id);
+            const res = await PairApi.deletePair(id);
 
             if (res.success) {
                 setPairs(prev => prev.filter(it => it.id !== id))

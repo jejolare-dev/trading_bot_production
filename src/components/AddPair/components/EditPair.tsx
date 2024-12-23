@@ -6,9 +6,9 @@ import BitcoinIcon from "@/assets/img/icons/btc.svg";
 import TetherIcon from "@/assets/img/icons/tether.svg";
 import BanditIcon from "@/assets/img/icons/bandit.svg";
 import TradeIcon from "@/assets/img/icons/trade_tsds.svg";
-import { editPair } from "@/utils/methods";
 import Pair from "@/interfaces/Pair";
 import Decimal from "decimal.js";
+import PairApi from "@/api/PairApi";
 
 // Filters data
 const coinsList: OptionType[] = [
@@ -53,7 +53,7 @@ const EditPair = ({
         if (!updatedPair) return;
 
         try {
-            const res = await editPair({
+            const res = await PairApi.editPair({
                 id: updatedPair?.id, 
                 price: price.toString(),
                 amount: amount.toString(),

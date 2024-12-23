@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useZanoWallet } from 'zano_web3/web';
 import { useAppContext } from '@/context';
-import { checkUserExists } from '@/utils/methods';
+import UserApi from '@/api/UserApi';
 
 // Home page connect wallet card
 const ConnectCard = () => {
@@ -25,7 +25,7 @@ const ConnectCard = () => {
         onConnectEnd: (data) => {
             setToken(data.token);
 
-            checkUserExists().then((res) => {
+            UserApi.checkUserExists().then((res) => {
                 if (res?.data?.userExists) {
                     setAuth(true);
                 }

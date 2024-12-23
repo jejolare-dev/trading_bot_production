@@ -8,10 +8,10 @@ import Pairs from "../Pairs";
 import AddPair from "../AddPair";
 import Pair from "@/interfaces/Pair";
 import { useRouter } from "next/navigation";
-import { validateToken } from "@/utils/methods";
 import { logout } from "@/utils/utils";
 import { Wallet } from "zano_web3/web";
 import { Asset } from "@/interfaces/Asset";
+import AuthApi from "@/api/AuthApi";
 
 const Trading = ({ initialPairs, walletData, assets }: { 
     initialPairs: Pair[], 
@@ -26,7 +26,7 @@ const Trading = ({ initialPairs, walletData, assets }: {
     useEffect(() => {
         const checkTokenValidity = async () => {
             try {
-                const res = await validateToken();
+                const res = await AuthApi.validateToken();
 
                 if (!res.data.isValid) {
                     logout();

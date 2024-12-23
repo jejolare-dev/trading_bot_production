@@ -10,22 +10,22 @@ class UserController {
         const userData: AuthData = req.body.userData;    
         const data = await userService.checkUserExists(userData);
         
-        if (data.success) {
-            res.status(200).send(data);
-        } else {
-            res.status(400).send(data);
+        if (!data.success) {
+            return res.status(400).send(data);
         }
+        
+        return res.status(200).send(data);
     }
 
     async getUserInfo(req: Request, res: Response) {
         const userData: UserData = req.body.userData;    
         const data = await userService.getUserInfo(userData);
         
-        if (data.success) {
-            res.status(200).send(data);
-        } else {
-            res.status(400).send(data);
+        if (!data.success) {
+            return res.status(400).send(data);
         }
+
+        return res.status(200).send(data);
     }
 }
 

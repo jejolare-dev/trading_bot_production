@@ -4,11 +4,11 @@ import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import styles from "../styles.module.scss";
 import BitcoinIcon from "@/assets/img/icons/btc.svg";
 import CloseIcon from "@/assets/img/icons/x.svg";
-import { addPair, getPairData } from "@/utils/methods";
 import Pair, { AddPairData } from "@/interfaces/Pair";
 import { debounce, urlParser } from "@/utils/utils";
 import { Decimal } from 'decimal.js';
 import TradeIcon from "@/assets/img/icons/trade_tsds.svg";
+import PairApi from "@/api/PairApi";
 
 interface AddNewPairTypes {
     type: string;
@@ -49,7 +49,7 @@ const AddNewPair = ({
             if (!url.length || lastProcessedUrl === url || !urlParser(url)) return;
 
             try {
-                const res = await getPairData(url);
+                const res = await PairApi.getPairData(url);
 
                 if (res.success) {
                     const { rate, volume, first_currency, second_currency } = res.data;
@@ -77,7 +77,7 @@ const AddNewPair = ({
         if (!pairData) return;
 
         try {
-            const res = await addPair({
+            const res = await PairApi.addPair({
                 ...pairData,
                 amount: amount.toString(),
                 price: price.toString()
@@ -106,7 +106,10 @@ const AddNewPair = ({
                 <div className={styles.modal__textfield_input}>
                     <input value={message} onInput={onInput} id="zano-trade-url" type="text" placeholder="Zano Trade URL..." />
                     {message ?
-                        <button onClick={() => setPairUrl("")}><CloseIcon /></button>
+                        <button onClick={() => {
+                            setPairUrl("");
+                            setMessage("");
+                        }}><CloseIcon /></button>
                         :
                         <button onClick={handleGetCopiedText}>Paste</button>
                     }

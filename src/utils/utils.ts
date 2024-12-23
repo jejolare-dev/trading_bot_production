@@ -26,3 +26,15 @@ export function debounce(func: (...args: any[]) => void, delay: number) {
         }, delay);
     };
 }
+
+export async function postFetch(path: string, body: object) {
+    return await fetch(path, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(
+            body
+        )
+    }).then(res => res.json());
+}

@@ -5,8 +5,6 @@ import Image from 'next/image';
 import CopyIcon from "@/assets/img/icons/copy.svg";
 import ZanoIcon from "@/assets/img/icons/zano.svg";
 import BanditIcon from "@/assets/img/icons/bandit.svg";
-import BTCIcon from "@/assets/img/icons/btc.svg";
-import TetherIcon from "@/assets/img/icons/tether.svg";
 import LogoutIcon from "@/assets/img/icons/logout.svg";
 import { classes, copyToClipboard } from '@/utils';
 import InfoIcon from '../UI/InfoIcon';

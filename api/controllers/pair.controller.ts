@@ -13,11 +13,11 @@ class PairController {
 
         const data = await pairService.getUserPairs(req.body.userData);
 
-        if (data.success) {
-            res.status(200).send(data);
-        } else {
-            res.status(400).send(data);
+        if (!data.success) {
+            return res.status(400).send(data);
         }
+            
+        return res.status(200).send(data);
     }
 
     async addPair(req: Request, res: Response) {
@@ -29,11 +29,11 @@ class PairController {
 
         const data = await pairService.createPair(req.body);
 
-        if (data.success) {
-            res.status(200).send(data);
-        } else {
+        if (!data.success) {
             res.status(400).send(data);
-        }  
+        } 
+        
+        return res.status(200).send(data);
     }
 
     async editPair(req: Request, res: Response) {
@@ -45,11 +45,11 @@ class PairController {
 
         const data = await pairService.editPair(req.body);
 
-        if (data.success) {
-            res.status(200).send(data);
-        } else {
-            res.status(400).send(data);
-        }  
+        if (!data.success) {
+            return res.status(400).send(data);
+        }
+            
+        return res.status(200).send(data);
     }
 
     async deletePair(req: Request, res: Response) {
@@ -61,11 +61,11 @@ class PairController {
 
         const data = await pairService.deletePair(req.body);
 
-        if (data.success) {
-            res.status(200).send(data);
-        } else {
-            res.status(400).send(data);
-        }  
+        if (!data.success) {
+            return res.status(400).send(data);
+        }
+            
+        return res.status(200).send(data);
     }
 
     async togglePairActivation(req: Request, res: Response) {
@@ -78,11 +78,12 @@ class PairController {
         
         const data = await pairService.toggleActivation(userData, id, active);
     
-        if (data.success) {
-            return res.status(200).send(data);
-        } else {
+        if (!data.success) {
             return res.status(400).send(data);
-        }
+            
+        }  
+        
+        return res.status(200).send(data);
     }
 
     async getPairData(req: Request, res: Response) {
@@ -95,11 +96,11 @@ class PairController {
 
         const data = await pairService.getPairDataFromZanoTrade(url);
     
-        if (data.success) { 
-            return res.status(200).send({ success: true, data: data.data });
-        } else {
+        if (!data.success) { 
             return res.status(400).send({ success: false, data: data.data });
         }
+
+        return res.status(200).send({ success: true, data: data.data });
     }
 
     async getUserAssets(req: Request, res: Response) {
@@ -111,11 +112,11 @@ class PairController {
 
         const data = await pairService.getUserAssets();
     
-        if (data) { 
-            return res.status(200).send({ success: true, data: data.data });
-        } else {
+        if (!data) { 
             return res.status(400).send({ success: false, data });
         }
+            
+        return res.status(200).send({ success: true, data: data.data });
     }
 }
 
