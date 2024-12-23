@@ -1,3 +1,4 @@
+import { ServerWallet } from "zano_web3/server";
 import CreatePairBody from "../interfaces/bodies/pair/CreatePairBody";
 import DeletePairBody from "../interfaces/bodies/pair/DeletePairBody";
 import EditPairBody from "../interfaces/bodies/pair/EditPairBody";
@@ -5,6 +6,7 @@ import UserData from "../interfaces/common/UserData";
 import pairModel from "../models/Pair";
 import userModel from "../models/User";
 import { getTradingIdFromUrl } from "../utils/utils";
+import walletInstance, { walletUrl } from "../utils/wallet";
 
 class PairService {
     async getUserPairs(userData: UserData) {
@@ -136,6 +138,12 @@ class PairService {
         const data = await response.json();
 
         return { success: true, data: data.data }
+    }
+
+    async getUserAssets() {
+        const assets = await walletInstance.getBalances();
+
+        return { success: true, data: assets || [] }
     }
 }
 

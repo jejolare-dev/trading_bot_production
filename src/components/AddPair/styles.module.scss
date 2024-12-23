@@ -116,7 +116,6 @@
     &_item {
       padding-bottom: 12px;
       padding-top: 15px;
-      border-bottom: 1px solid var(--blue-200);
 
       &:last-child {
         border-bottom: none;
@@ -155,7 +154,7 @@
           font-size: 20px;
           font-weight: 500;
           color: var(--white);
-          max-width: 100px;
+          max-width: 100%;
 
           &::placeholder {
             color: var(--gray);

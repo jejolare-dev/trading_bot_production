@@ -12,9 +12,11 @@ import { classes, copyToClipboard } from '@/utils';
 import InfoIcon from '../UI/InfoIcon';
 import User from '@/interfaces/User';
 import { logout } from '@/utils/utils';
+import { Asset } from '@/interfaces/Asset';
+import TradeIcon from "@/assets/img/icons/trade_tsds.svg";
 
 // Trading page sidebar
-const Sidebar = ({ walletData }: { walletData: User }) => {
+const Sidebar = ({ walletData, assets }: { walletData: User, assets: Asset[] }) => {
     const [isCopied, setCopied] = useState(false);
 
     // On copy address
@@ -57,28 +59,21 @@ const Sidebar = ({ walletData }: { walletData: User }) => {
                 </div>
 
                 <div className={styles.sidebar__item}>
-                    <div className={styles.sidebar__coins}>
-                        <div className={styles.sidebar__coins_item}>
-                            <ZanoIcon />
-                            <p>100 ZANO</p>
-                            <span>~$150</span>
-                        </div>
-                        <div className={styles.sidebar__coins_item}>
-                            <BanditIcon />
-                            <p>51 200 BANDIT</p>
-                            <span>~$150</span>
-                        </div>
-                        <div className={styles.sidebar__coins_item}>
-                            <BTCIcon />
-                            <p>0,125124 BTC</p>
-                            <span>~$51251</span>
-                        </div>
-                        <div className={styles.sidebar__coins_item}>
-                            <TetherIcon />
-                            <p>100 ZANO</p>
-                            <span>~$150</span>
-                        </div>
-                    </div>
+                    {
+                        assets.map((asset, id) => (
+                            <div key={id} className={styles.sidebar__coins_item}>
+                                {asset.ticker.toUpperCase() === "ZANO" ?
+                                    <ZanoIcon />
+                                    : asset.ticker.toUpperCase() === "BANDIT"
+                                    ? <BanditIcon />
+                                    : <TradeIcon width={18} height={18} />
+                                }
+                                
+                                <p>{asset.amount} {asset.ticker.toUpperCase()}</p>
+                                <span>{}</span>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
 

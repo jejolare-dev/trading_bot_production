@@ -101,6 +101,22 @@ class PairController {
             return res.status(400).send({ success: false, data: data.data });
         }
     }
+
+    async getUserAssets(req: Request, res: Response) {
+        const errors = validationResult(req);
+    
+        if (!errors.isEmpty()) {
+            return res.status(400).send({ success: false, data: "Invalid data" });
+        }
+
+        const data = await pairService.getUserAssets();
+    
+        if (data) { 
+            return res.status(200).send({ success: true, data: data.data });
+        } else {
+            return res.status(400).send({ success: false, data });
+        }
+    }
 }
 
 const pairController = new PairController();

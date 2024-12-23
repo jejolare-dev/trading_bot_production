@@ -5,4 +5,6 @@ export interface AddPairTypes {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
     setPairs: Dispatch<SetStateAction<Pair[]>>;
+    updatedPair: Pair | null;
+    setUpdatedPair: Dispatch<SetStateAction<Pair | null>>;
 }

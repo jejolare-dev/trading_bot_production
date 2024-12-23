@@ -5,16 +5,18 @@ import styles from "./styles.module.scss";
 import { classes } from "@/utils";
 import { AddPairTypes } from "./types";
 import AddNewPair from "./components/AddNewPair";
-import CreatePair from "./components/CreatePair";
+import CreatePair from "./components/EditPair";
 import CloseIcon from "@/assets/img/icons/x.svg";
 import { AddPairData } from "@/interfaces/Pair";
 
 const AddPair = ({ 
     isOpen, 
     setIsOpen,
-    setPairs }: AddPairTypes) => {
+    setPairs,
+    updatedPair,
+    setUpdatedPair,
+ }: AddPairTypes) => {
     const [type, setType] = useState<"buy" | "sell">("buy");
-    const [isPairAdded, setIsPairAdded] = useState(false);
     const [pairData, setPairData] = useState<AddPairData | null>();
     const [pairUrl, setPairUrl] = useState("");
     const [lastProcessedUrl, setLastProcessedUrl] = useState("");
@@ -41,15 +43,18 @@ const AddPair = ({
             <div className={styles.modal}>
                 <button onClick={() => setIsOpen(false)} className={styles.modal__close}><CloseIcon /></button>
 
-                <h3 className={styles.modal__title}>{isPairAdded ? "Create new trading pair" : "Add new trading pair"}</h3>
+                <h3 className={styles.modal__title}>{updatedPair ? "Edit trading pair" : "Add new trading pair"}</h3>
 
                 <ModalTab />
 
-                {isPairAdded ?
+                {updatedPair ?
                     <CreatePair
                         setIsOpen={setIsOpen}
-                        setIsPairAdded={setIsPairAdded}
                         setType={setType}
+                        setUpdatedPair={setUpdatedPair}
+                        type={type}
+                        updatedPair={updatedPair}
+                        setPairs={setPairs}
                     /> :
                     <AddNewPair
                         type={type}
@@ -64,11 +69,20 @@ const AddPair = ({
                     />}
             </div>
         );
-    }, [isPairAdded, ModalTab, setIsOpen, pairData, pairUrl]);
+    }, [updatedPair, ModalTab, setIsOpen, pairData, pairUrl]);
 
     return (
         <>
-            {isOpen && <Popup Content={Pairs} close={() => setIsOpen(false)} settings={{}} blur />}
+            {isOpen && 
+                <Popup 
+                    Content={Pairs} 
+                    close={() => {
+                        setIsOpen(false);
+                        setUpdatedPair(null);
+                    }} 
+                    settings={{}} 
+                    blur />
+            }
         </>
     )
 }

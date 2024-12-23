@@ -1,13 +1,14 @@
 import Button from "@/components/UI/Button";
 import { getLastCopiedText } from "@/utils";
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import styles from "../styles.module.scss";
 import BitcoinIcon from "@/assets/img/icons/btc.svg";
-import ZanoIcon from "@/assets/img/icons/zano.svg";
 import CloseIcon from "@/assets/img/icons/x.svg";
 import { addPair, getPairData } from "@/utils/methods";
 import Pair, { AddPairData } from "@/interfaces/Pair";
 import { debounce, urlParser } from "@/utils/utils";
+import { Decimal } from 'decimal.js';
+import TradeIcon from "@/assets/img/icons/trade_tsds.svg";
 
 interface AddNewPairTypes {
     type: string;
@@ -33,6 +34,8 @@ const AddNewPair = ({
     setPairs,
 }: AddNewPairTypes) => {
     const [message, setMessage] = useState(pairUrl);
+    const [amount, setAmount] = useState(new Decimal(pairData?.amount || 0));
+    const [price, setPrice] = useState(new Decimal(pairData?.price || 0));
 
     const handleGetCopiedText = async () => {
         const text = await getLastCopiedText();
@@ -74,7 +77,11 @@ const AddNewPair = ({
         if (!pairData) return;
 
         try {
-            const res = await addPair(pairData);
+            const res = await addPair({
+                ...pairData,
+                amount: amount.toString(),
+                price: price.toString()
+            });
 
             if (res.success) {
                 setIsOpen(false);
@@ -111,20 +118,20 @@ const AddNewPair = ({
             {pairData && <div className={styles.modal__pairInfo}>
                 <div className={styles.modal__pairInfo_item}>
                     <div className={styles.title}>
-                        <BitcoinIcon /> <span>Price</span>
+                        <TradeIcon width={20} height={20} /> <span>Price</span>
                     </div>
-                    <div className={styles.info}>
-                        <p>{ pairData.price }</p>
+                    <div className={styles.modal__textfield_input}>
+                        <input value={price.toString()} type="number" onChange={(e) => setPrice(new Decimal(e.target.value || 0))}/>
                         <span>{ pairData.baseCurrency }</span>
                     </div>
                 </div>
                 <div className={styles.modal__pairInfo_item}>
                     <div className={styles.title}>
-                        <ZanoIcon /> <span>Amount</span>
+                        <TradeIcon width={20} height={20} /> <span>Amount</span>
                     </div>
-                    <div className={styles.info}>
-                        <p>{ pairData.amount }</p>
-                        <span>{pairData.quoteCurrency }</span>
+                    <div className={styles.modal__textfield_input}>
+                        <input value={amount.toString()} type="number" onChange={(e) => setAmount(new Decimal(e.target.value || 0))}/>
+                        <span>{pairData.quoteCurrency}</span>
                     </div>
                 </div>
                 <div className={styles.modal__pairInfo_item}>
@@ -132,7 +139,7 @@ const AddNewPair = ({
                         <BitcoinIcon /> <span>Total</span>
                     </div>
                     <div className={styles.info}>
-                        <p>{ pairData.amount * pairData.price }</p>
+                        <p>{ amount.times(price).toString() }</p>
                         <span>{ pairData.quoteCurrency }</span>
                     </div>
                 </div>

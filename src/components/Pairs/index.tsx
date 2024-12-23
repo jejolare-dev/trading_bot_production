@@ -33,10 +33,14 @@ const pairFilters: OptionType[] = [
 const Pairs = ({ 
     pairs, 
     setPairs,
-    setAddPairModal }: { 
+    setAddPairModal,
+    setUpdatedPair,
+}: { 
         setAddPairModal: Dispatch<SetStateAction<boolean>>,
         setPairs: Dispatch<SetStateAction<Pair[]>>,
-        pairs: Pair[],  }) => {
+        pairs: Pair[],  
+        setUpdatedPair: Dispatch<SetStateAction<Pair | null>>,
+    }) => {
     const [selected, setSelected] = useState<OptionType>();
 
     // Toggle pair activity
@@ -118,7 +122,10 @@ const Pairs = ({
                                             <button onClick={() => onPairDelete(e.id)}>
                                                 <DelIcon />
                                             </button> 
-                                            <button>
+                                            <button onClick={() => {
+                                                setAddPairModal(true);
+                                                setUpdatedPair(e);
+                                                }}>
                                                 <EditIcon />
                                             </button>
                                         </div>

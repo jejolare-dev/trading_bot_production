@@ -1,4 +1,4 @@
-import { AddPairData } from "@/interfaces/Pair";
+import { AddPairData, EditPairData } from "@/interfaces/Pair";
 import { getCookie } from "./utils";
 
 async function postFetch(path: string, body: object) {
@@ -56,5 +56,23 @@ export async function deletePair(id: string) {
     return await postFetch(
         "/api/pair/delete-pair",
         { token, id }
+    )
+}
+
+export async function editPair(pairData: EditPairData) {
+    const token = getCookie("token");
+
+    return await postFetch(
+        "/api/pair/edit-pair",
+        { token, pairData }
+    )
+}
+
+export async function validateToken() {
+    const token = getCookie("token");
+
+    return await postFetch(
+        "/api/auth/validate-token",
+        { token }
     )
 }
