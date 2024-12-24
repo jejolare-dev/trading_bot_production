@@ -12,6 +12,7 @@ import User from '@/interfaces/User';
 import { logout } from '@/utils/utils';
 import { Asset } from '@/interfaces/Asset';
 import TradeIcon from "@/assets/img/icons/trade_tsds.svg";
+import getAssetIcon from '../AssetIcon';
 
 // Trading page sidebar
 const Sidebar = ({ walletData, assets }: { walletData: User, assets: Asset[] }) => {
@@ -60,12 +61,7 @@ const Sidebar = ({ walletData, assets }: { walletData: User, assets: Asset[] }) 
                     {
                         assets.map((asset, id) => (
                             <div key={id} className={styles.sidebar__coins_item}>
-                                {asset.ticker.toUpperCase() === "ZANO" ?
-                                    <ZanoIcon />
-                                    : asset.ticker.toUpperCase() === "BANDIT"
-                                    ? <BanditIcon />
-                                    : <TradeIcon width={18} height={18} />
-                                }
+                                {getAssetIcon(asset.ticker.toUpperCase())}
                                 
                                 <p>{asset.amount} {asset.ticker.toUpperCase()}</p>
                                 <span>{}</span>

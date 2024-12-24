@@ -1,33 +1,14 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "../styles.module.scss";
 import { OptionType } from "@/components/UI/Select/types";
 import Button from "@/components/UI/Button";
 import BitcoinIcon from "@/assets/img/icons/btc.svg";
 import TetherIcon from "@/assets/img/icons/tether.svg";
 import BanditIcon from "@/assets/img/icons/bandit.svg";
-import TradeIcon from "@/assets/img/icons/trade_tsds.svg";
 import Pair from "@/interfaces/Pair";
 import Decimal from "decimal.js";
 import PairApi from "@/api/PairApi";
-
-// Filters data
-const coinsList: OptionType[] = [
-    {
-        name: "BTC",
-        value: "btc",
-        Icon: <BitcoinIcon />
-    },
-    {
-        name: "BANDIT",
-        value: "bandit",
-        Icon: <BanditIcon />
-    },
-    {
-        name: "USDT",
-        value: "usdt",
-        Icon: <TetherIcon />
-    }
-];
+import getAssetIcon from "@/components/AssetIcon";
 
 interface CreatePairTypes {
     setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -36,6 +17,10 @@ interface CreatePairTypes {
     type: string;
     updatedPair: Pair;
     setPairs: Dispatch<SetStateAction<Pair[]>>;
+    priceStroke: string;
+    amountStroke: string;
+    debouncedPriceCheck: (price: string) => void;
+    debouncedAmountCheck: (amount: string) => void;
 }
 
 const EditPair = ({ 
@@ -45,9 +30,13 @@ const EditPair = ({
     type, 
     updatedPair,
     setPairs,
+    priceStroke,
+    amountStroke,
+    debouncedPriceCheck,
+    debouncedAmountCheck,
  }: CreatePairTypes) => {
-    const [amount, setAmount] = useState(new Decimal(updatedPair?.amount || 0));
-    const [price, setPrice] = useState(new Decimal(updatedPair?.price || 0));
+    const [amount, setAmount] = useState(new Decimal(updatedPair?.amount || ""));
+    const [price, setPrice] = useState(new Decimal(updatedPair?.price || ""));
 
     const onEditPair = async () => {
         if (!updatedPair) return;
@@ -82,35 +71,45 @@ const EditPair = ({
         }
     };
 
-    // Toggle buy/sell changer
-    const toggleChange = () => {
-        setType((prevType) => prevType === "buy" ? "sell" : "buy");
-    }
+    useEffect(() => {
+        debouncedPriceCheck(price.toString());
+    }, [price]);
+
+    useEffect(() => {
+        debouncedAmountCheck(amount.toString());
+    }, [amount]);
 
     return (
         <>
             <div className={styles.modal__pairInfo}>
                 <div className={styles.modal__pairInfo_item}>
                     <div className={styles.title}>
-                        <TradeIcon width={20} height={20} /> <span>Price</span>
+                        {getAssetIcon(updatedPair.baseCurrency)} 
+                        <span>Price</span>
                     </div>
                     <div className={styles.modal__textfield_input}>
                         <input value={price.toString()} type="number" onChange={(e) => setPrice(new Decimal(e.target.value || 0))}/>
                         <span>{ updatedPair.baseCurrency }</span>
                     </div>
+
+                    {priceStroke && (<span className={styles.stroke}>{priceStroke}</span>)}
                 </div>
                 <div className={styles.modal__pairInfo_item}>
                     <div className={styles.title}>
-                        <TradeIcon width={20} height={20} /> <span>Amount</span>
+                        {getAssetIcon(updatedPair.quoteCurrency)} 
+                        <span>Amount</span>
                     </div>
                     <div className={styles.modal__textfield_input}>
                         <input value={amount.toString()} type="number" onChange={(e) => setAmount(new Decimal(e.target.value || 0))}/>
                         <span>{updatedPair.quoteCurrency}</span>
                     </div>
+
+                    {amountStroke && (<span className={styles.stroke}>{amountStroke}</span>)}
                 </div>
                 <div className={styles.modal__pairInfo_item}>
                     <div className={styles.title}>
-                        <BitcoinIcon /> <span>Total</span>
+                        {getAssetIcon(updatedPair.quoteCurrency)}
+                        <span>Total</span>
                     </div>
                     <div className={styles.info}>
                         <p>{ amount.times(price).toString() }</p>
@@ -119,7 +118,13 @@ const EditPair = ({
                 </div>
             </div>
 
-            <Button onClick={onEditPair} className={styles.modal__btn} width="100%">Edit</Button>
+            <Button 
+                onClick={onEditPair} 
+                className={styles.modal__btn} 
+                disabled={Boolean(amountStroke || priceStroke)}
+                width="100%"
+                >Edit
+            </Button>
         </>
     )
 }

@@ -1,14 +1,14 @@
 import Button from "@/components/UI/Button";
 import { getLastCopiedText } from "@/utils";
-import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import styles from "../styles.module.scss";
-import BitcoinIcon from "@/assets/img/icons/btc.svg";
 import CloseIcon from "@/assets/img/icons/x.svg";
 import Pair, { AddPairData } from "@/interfaces/Pair";
 import { debounce, urlParser } from "@/utils/utils";
 import { Decimal } from 'decimal.js';
-import TradeIcon from "@/assets/img/icons/trade_tsds.svg";
 import PairApi from "@/api/PairApi";
+import Preloader from "@/components/Preloader";
+import getAssetIcon from "@/components/AssetIcon";
 
 interface AddNewPairTypes {
     type: string;
@@ -20,6 +20,10 @@ interface AddNewPairTypes {
     lastProcessedUrl: string;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
     setPairs: Dispatch<SetStateAction<Pair[]>>,
+    priceStroke: string;
+    amountStroke: string;
+    debouncedPriceCheck: (price: string) => void;
+    debouncedAmountCheck: (amount: string) => void;
 }
 
 const AddNewPair = ({
@@ -32,10 +36,16 @@ const AddNewPair = ({
     lastProcessedUrl,
     setIsOpen,
     setPairs,
+    priceStroke,
+    amountStroke,
+    debouncedPriceCheck,
+    debouncedAmountCheck,
 }: AddNewPairTypes) => {
     const [message, setMessage] = useState(pairUrl);
-    const [amount, setAmount] = useState(new Decimal(pairData?.amount || 0));
-    const [price, setPrice] = useState(new Decimal(pairData?.price || 0));
+    const [amount, setAmount] = useState(new Decimal("0"));
+    const [price, setPrice] = useState(new Decimal("0"));
+    const [isLoading, setIsLoading] = useState(false);
+    const [isValidatingInput, setIsValidatingInput] = useState(false);
 
     const handleGetCopiedText = async () => {
         const text = await getLastCopiedText();
@@ -47,6 +57,9 @@ const AddNewPair = ({
     const fetchPairData = useCallback(
         async (url: string) => {
             if (!url.length || lastProcessedUrl === url || !urlParser(url)) return;
+
+            setIsLoading(true);
+            setIsValidatingInput(true);
 
             try {
                 const res = await PairApi.getPairData(url);
@@ -65,10 +78,13 @@ const AddNewPair = ({
                     });
 
                     setLastProcessedUrl(url);
+                    setIsLoading(false);
                 }
-            } catch (error) {}
+            } catch (error) { 
+                setIsLoading(false);
+            }
         },
-        [lastProcessedUrl, setPairData, setLastProcessedUrl, type]
+        [lastProcessedUrl, setPairData, setLastProcessedUrl]
     );
 
     const debouncedFetchPairData = debounce(fetchPairData, 300);
@@ -80,7 +96,8 @@ const AddNewPair = ({
             const res = await PairApi.addPair({
                 ...pairData,
                 amount: amount.toString(),
-                price: price.toString()
+                price: price.toString(),
+                type
             });
 
             if (res.success) {
@@ -96,6 +113,25 @@ const AddNewPair = ({
         setMessage(value);
         debouncedFetchPairData(value);
     };
+
+    useEffect(() => {
+        if (pairData) {
+            setAmount(new Decimal(pairData.amount || 0));
+            setPrice(new Decimal(pairData.price || 0));
+        }
+    }, [pairData]);
+
+    useEffect(() => {
+        debouncedPriceCheck(price.toString());
+    }, [price]);
+
+    useEffect(() => {
+        debouncedAmountCheck(amount.toString());
+    }, [amount]);
+
+    useEffect(() => {
+        setIsValidatingInput(false);
+    }, [amountStroke, priceStroke]);
 
     return (
         <>
@@ -118,28 +154,35 @@ const AddNewPair = ({
                 {pairData && <p>The pair found!</p>}
             </div>
 
-            {pairData && <div className={styles.modal__pairInfo}>
+            {pairData && !isLoading && <div className={styles.modal__pairInfo}>
                 <div className={styles.modal__pairInfo_item}>
                     <div className={styles.title}>
-                        <TradeIcon width={20} height={20} /> <span>Price</span>
+                        {getAssetIcon(pairData.baseCurrency)} 
+                        <span>Price</span>
                     </div>
                     <div className={styles.modal__textfield_input}>
                         <input value={price.toString()} type="number" onChange={(e) => setPrice(new Decimal(e.target.value || 0))}/>
                         <span>{ pairData.baseCurrency }</span>
                     </div>
+
+                    {priceStroke && !isValidatingInput && (<span className={styles.stroke}>{priceStroke}</span>)}
                 </div>
                 <div className={styles.modal__pairInfo_item}>
                     <div className={styles.title}>
-                        <TradeIcon width={20} height={20} /> <span>Amount</span>
+                        {getAssetIcon(pairData.quoteCurrency)} 
+                        <span>Amount</span>
                     </div>
                     <div className={styles.modal__textfield_input}>
                         <input value={amount.toString()} type="number" onChange={(e) => setAmount(new Decimal(e.target.value || 0))}/>
                         <span>{pairData.quoteCurrency}</span>
                     </div>
+
+                    {amountStroke && !isValidatingInput && (<span className={styles.stroke}>{amountStroke}</span>)}
                 </div>
                 <div className={styles.modal__pairInfo_item}>
                     <div className={styles.title}>
-                        <BitcoinIcon /> <span>Total</span>
+                        {getAssetIcon(pairData.quoteCurrency)} 
+                        <span>Total</span>
                     </div>
                     <div className={styles.info}>
                         <p>{ amount.times(price).toString() }</p>
@@ -148,7 +191,15 @@ const AddNewPair = ({
                 </div>
             </div>}
 
-            <Button onClick={onAdd} className={styles.modal__btn} disabled={!pairUrl} width="100%">Add</Button>
+            {isLoading && <Preloader />}
+
+            <Button 
+                onClick={onAdd} 
+                className={styles.modal__btn} 
+                disabled={!pairUrl || Boolean(amountStroke || priceStroke)} 
+                width="100%">
+                    Add
+            </Button>
         </>
     )
 };

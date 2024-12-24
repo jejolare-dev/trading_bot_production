@@ -1,4 +1,3 @@
-import { ServerWallet } from "zano_web3/server";
 import CreatePairBody from "../interfaces/bodies/pair/CreatePairBody";
 import DeletePairBody from "../interfaces/bodies/pair/DeletePairBody";
 import EditPairBody from "../interfaces/bodies/pair/EditPairBody";
@@ -6,7 +5,8 @@ import UserData from "../interfaces/common/UserData";
 import pairModel from "../models/Pair";
 import userModel from "../models/User";
 import { getTradingIdFromUrl } from "../utils/utils";
-import walletInstance, { walletUrl } from "../utils/wallet";
+import walletInstance from "../utils/wallet";
+import { validateTokensInput } from "zano_web3/shared";
 
 class PairService {
     async getUserPairs(userData: UserData) {
@@ -23,8 +23,13 @@ class PairService {
 
     async createPair(body: CreatePairBody) {
         const pairData = body.pairData;
+        const { amount, price } = pairData;
         const userData = body.userData;
         const existingUser = await userModel.getUserById(userData.id);
+
+        if (!validateTokensInput(amount)?.valid || !validateTokensInput(price)?.valid) {
+            return { success: false, data: "Fields validation failed. Invalid amount or price" };
+        }
 
         if (!existingUser) {
             return { success: false, data: "User not found." };
@@ -43,6 +48,11 @@ class PairService {
         const pairData = body.pairData;
         const { id, ...updateFields } = pairData;
         const userData = body.userData;
+
+        if (!validateTokensInput(updateFields.amount)?.valid || 
+            !validateTokensInput(updateFields.price)?.valid) {
+            return { success: false, data: "Fields validation failed. Invalid amount or price" };
+        }
 
         const existingPair = await pairModel.getPairById(id);
 
@@ -141,9 +151,13 @@ class PairService {
     }
 
     async getUserAssets() {
-        const assets = await walletInstance.getBalances();
+        try {
+            const assets = await walletInstance.getBalances();
 
-        return { success: true, data: assets || [] }
+            return { success: true, data: assets || [] }
+        } catch (error: any) {
+            return { success: false, data: error?.code }
+        }
     }
 }
 

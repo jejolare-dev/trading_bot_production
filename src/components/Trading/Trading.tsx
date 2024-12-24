@@ -7,11 +7,12 @@ import Header from "../Header";
 import Pairs from "../Pairs";
 import AddPair from "../AddPair";
 import Pair from "@/interfaces/Pair";
-import { useRouter } from "next/navigation";
-import { logout } from "@/utils/utils";
 import { Wallet } from "zano_web3/web";
 import { Asset } from "@/interfaces/Asset";
 import AuthApi from "@/api/AuthApi";
+import { logout } from "@/utils/utils";
+import { useRouter } from "next/navigation";
+import useTokenValidation from "@/hooks/useTokenValidation";
 
 const Trading = ({ initialPairs, walletData, assets }: { 
     initialPairs: Pair[], 
@@ -21,23 +22,8 @@ const Trading = ({ initialPairs, walletData, assets }: {
     const [addPairModal, setAddPairModal] = useState(false);
     const [pairs, setPairs] = useState(initialPairs);
     const [updatedPair, setUpdatedPair] = useState<Pair | null>(null);
-    const router = useRouter()
-
-    useEffect(() => {
-        const checkTokenValidity = async () => {
-            try {
-                const res = await AuthApi.validateToken();
-
-                if (!res.data.isValid) {
-                    logout();
-                }
-            } catch (error) {
-                logout();
-            }
-        };
-
-        checkTokenValidity();
-    }, [router]);
+    
+    useTokenValidation();
 
     return (
         <>
