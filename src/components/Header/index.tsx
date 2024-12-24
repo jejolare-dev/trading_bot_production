@@ -13,7 +13,7 @@ const Header = ({ setAddPairModal }: { setAddPairModal: Dispatch<SetStateAction<
                 <Button onClick={() => setAddPairModal(true)} variant='success'>+ Add trading pair</Button>
             </div>
 
-            <div className={styles.header__info}>
+            {/* <div className={styles.header__info}>
                 <div className={styles.header__info_card}>
                     <h5>Realized PnL <InfoIcon Icon={InfoOutlineIcon} info='Realized PnL' /></h5>
                     <p>+ 124.21 USD</p>
@@ -33,7 +33,7 @@ const Header = ({ setAddPairModal }: { setAddPairModal: Dispatch<SetStateAction<
                     <h5>All Time PnL <InfoIcon Icon={InfoOutlineIcon} info='All Time PnL' /></h5>
                     <p>1.58%</p>
                 </div>
-            </div>
+            </div> */}
         </header>
     )
 }

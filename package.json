@@ -13,6 +13,7 @@
     "@types/sequelize": "^4.28.20",
     "axios": "^1.7.9",
     "cors": "^2.8.5",
+    "decimal.js": "^10.4.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-validator": "^7.2.0",
@@ -24,7 +25,8 @@
     "sass": "^1.82.0",
     "sequelize": "^6.37.5",
     "sequelize-typescript": "^2.1.6",
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "zano_web3": "^7.2.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

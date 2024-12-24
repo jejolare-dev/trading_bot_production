@@ -4,12 +4,13 @@ import { OptionType } from '../UI/Select/types';
 import Select from "../UI/Select";
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { classes } from "@/utils";
-import BanditIcon from "@/assets/img/icons/bandit.svg";
-import ZanoIcon from "@/assets/img/icons/zano-symbol.svg";
 import EditIcon from "@/assets/img/icons/edit.svg";
 import DelIcon from "@/assets/img/icons/delete.svg";
 import Toggle from "../UI/Toggle";
 import Button from "../UI/Button";
+import Pair from "@/interfaces/Pair";
+import PairApi from "@/api/PairApi";
+import getAssetIcon from "../AssetIcon";
 
 // Filters data
 const pairFilters: OptionType[] = [
@@ -27,122 +28,43 @@ const pairFilters: OptionType[] = [
     }
 ]
 
-// Test pairs data
-interface PairType {
-    id: number;
-    order: string;
-    orderType: "long" | "short";
-    type: "buy" | "sell";
-    amount: string;
-    price: string;
-    active: boolean;
-}
-
-const pairsData: PairType[] = [
-    {
-        id: 1,
-        order: "BANDIT / ZANO",
-        orderType: "long",
-        type: "buy",
-        amount: "10 000 BANDIT",
-        price: "0,00 ZANO",
-        active: true,
-    },
-    {
-        id: 2,
-        order: "BANDIT / ZANO",
-        orderType: "long",
-        type: "sell",
-        amount: "25 000 BANDIT",
-        price: "12,15212 ZANO",
-        active: false,
-    },
-    {
-        id: 3,
-        order: "BANDIT / ZANO",
-        orderType: "long",
-        type: "sell",
-        amount: "10 BANDIT",
-        price: "100 ZANO",
-        active: false,
-    },
-    {
-        id: 4,
-        order: "BANDIT / ZANO",
-        orderType: "short",
-        type: "buy",
-        amount: "4 000 BANDIT",
-        price: "15,00 ZANO",
-        active: true,
-    },
-    {
-        id: 5,
-        order: "BANDIT / ZANO",
-        orderType: "long",
-        type: "buy",
-        amount: "1, 000 BANDIT",
-        price: "0,15 ZANO",
-        active: false,
-    },
-    {
-        id: 6,
-        order: "BANDIT / ZANO",
-        orderType: "short",
-        type: "sell",
-        amount: "10 000 BANDIT",
-        price: "0,00 ZANO",
-        active: true,
-    },
-    {
-        id: 7,
-        order: "BANDIT / ZANO",
-        orderType: "long",
-        type: "sell",
-        amount: "10 BANDIT",
-        price: "100 ZANO",
-        active: false,
-    },
-    {
-        id: 8,
-        order: "BANDIT / ZANO",
-        orderType: "short",
-        type: "buy",
-        amount: "4 000 BANDIT",
-        price: "15,00 ZANO",
-        active: true,
-    },
-    {
-        id: 9,
-        order: "BANDIT / ZANO",
-        orderType: "long",
-        type: "buy",
-        amount: "1, 000 BANDIT",
-        price: "0,15 ZANO",
-        active: false,
-    },
-    {
-        id: 10,
-        order: "BANDIT / ZANO",
-        orderType: "short",
-        type: "sell",
-        amount: "10 000 BANDIT",
-        price: "0,00 ZANO",
-        active: true,
-    },
-]
-
 // Trading page pairs
-const Pairs = ({ setAddPairModal }: { setAddPairModal: Dispatch<SetStateAction<boolean>> }) => {
+const Pairs = ({ 
+    pairs, 
+    setPairs,
+    setAddPairModal,
+    setUpdatedPair,
+}: { 
+        setAddPairModal: Dispatch<SetStateAction<boolean>>,
+        setPairs: Dispatch<SetStateAction<Pair[]>>,
+        pairs: Pair[],  
+        setUpdatedPair: Dispatch<SetStateAction<Pair | null>>,
+    }) => {
     const [selected, setSelected] = useState<OptionType>();
-    const [pairs, setPairs] = useState<PairType[] | undefined>(pairsData);
 
     // Toggle pair activity
-    const togglePairActivity = (id: number) => {
-        const changedPair = pairs?.map(pair =>
-            pair.id === id ? { ...pair, active: !pair.active } : pair
-        )
+    const onTogglePairActivity = async (id: string, active: boolean) => {
+        try {
+            const res = await PairApi.togglePairActivation(id, active);
 
-        setPairs(changedPair)
+            if (res.success) {
+                const changedPair = pairs?.map(pair =>
+                    pair.id === id ? { ...pair, active: !pair.active } : pair
+                )
+        
+                setPairs(changedPair)
+            }
+        } catch (error) {}
+    }
+
+    const onPairDelete = async (id: string) => {
+        try {
+            const res = await PairApi.deletePair(id);
+
+            if (res.success) {
+                setPairs(prev => prev.filter(it => it.id !== id))
+            }
+        } catch (error) {}
     }
 
     // Filtered pairs
@@ -187,12 +109,26 @@ const Pairs = ({ setAddPairModal }: { setAddPairModal: Dispatch<SetStateAction<b
                             {filteredPairs()?.map((e, idx) => (
                                 <tr className={styles.body} key={e.id}>
                                     <td className={styles.num_item}>{idx + 1}</td>
-                                    <td className={styles.order_item}><p>{e.order} <span className={styles[e.orderType]}>{e.orderType}</span></p></td>
+                                    <td className={styles.order_item}><p>{e.baseCurrency} / {e.quoteCurrency} <span className={styles[e.orderType]}>{e.orderType}</span></p></td>
                                     <td className={classes(styles.type_item, styles[e.type])}><span>{e.type}</span></td>
-                                    <td className={styles.amount_item}><div><BanditIcon /> <span>{e.amount}</span></div></td>
-                                    <td className={styles.price_item}><div><ZanoIcon /> <span>{e.price}</span></div></td>
+                                    <td className={styles.amount_item}><div>{getAssetIcon(e.baseCurrency)} <span>{e.amount}</span></div></td>
+                                    <td className={styles.price_item}><div>{getAssetIcon(e.quoteCurrency)} <span>{e.price}</span></div></td>
                                     <td className={classes(styles.status_item, e.active && styles.active)}><span>{e.active ? "Active" : "Inactive"}</span></td>
-                                    <td className={styles.actions_item}><div><Toggle value={e.active} onChange={() => togglePairActivity(e.id)} /> <button><DelIcon /></button> <button><EditIcon /></button></div></td>
+
+                                    <td className={styles.actions_item}>
+                                        <div>
+                                            <Toggle value={e.active} onChange={() => onTogglePairActivity(e.id, !e.active)} /> 
+                                            <button onClick={() => onPairDelete(e.id)}>
+                                                <DelIcon />
+                                            </button> 
+                                            <button onClick={() => {
+                                                setAddPairModal(true);
+                                                setUpdatedPair(e);
+                                                }}>
+                                                <EditIcon />
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

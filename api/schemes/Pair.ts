@@ -5,8 +5,8 @@ class Pair extends Model {
     declare readonly id: string;
     declare orderType: string;
     declare type: string;
-    declare amount: number;
-    declare price: number;
+    declare amount: string;
+    declare price: string;
     declare active: boolean;
     declare userId: string;
     declare baseCurrency: string;
@@ -31,11 +31,11 @@ Pair.init({
         allowNull: false,
     },
     amount: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     price: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     active: {

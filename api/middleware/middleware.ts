@@ -1,12 +1,18 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import UserData from "../interfaces/common/UserData";
+import verifyUserData from "../jwt/verifyUserToken";
+import { redirect } from "next/navigation";
 
 class Middleware {
     async verifyToken(req: Request, res: Response, next: NextFunction) {
         try {
-            const userData = jwt.verify(req.body.token, process.env.JWT_SECRET || "") as UserData;
+            const userData = verifyUserData(req.body.token);
+            
+            if (!userData) {
+                throw new Error();
+            }
+
             req.body.userData = userData;
+
             next();
         } catch {
             res.status(401).send({ success: false, data: "Unauthorized" });

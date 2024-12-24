@@ -1,5 +1,5 @@
 export default interface PairRow {
-    id: number,
+    id: string,
     orderType: string,
     type: string,
     price: number,
