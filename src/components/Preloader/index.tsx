@@ -6,10 +6,10 @@ function Preloader(props: { className?: string }) {
     return (
         <div className={styles["lds-ellipsis"] + " " + (className || "")}>
             <div className={styles.lds__ellipsis_container}>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                {Array(4).fill("").map((_, index) => (
+                        <div key={index} />
+                    ))
+                }
             </div>
         </div>
     );
