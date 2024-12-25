@@ -30,14 +30,14 @@ async function fetchInitialData() {
     const walletData = await fetchWalletData(token);
     const assets = await fetchUserAssets(token);
 
-    if (!assets?.success) {
+    if (!assets.success && assets?.data === "BALANCES_FETCH_ERROR") {
         redirect("/incorrect-setup");
     }
 
     return {
         initialPairs: userPairs?.success ? userPairs.data : [],
         walletData: walletData?.success ? walletData.data : null,
-        assets: assets.data,
+        assets: assets?.success ? assets.data : [],
     };
 }
 
@@ -75,6 +75,6 @@ export async function fetchUserAssets(token: string) {
 
         return response.data;
     } catch (error: any) {
-        return;
+        return error?.response?.data;
     }
 }

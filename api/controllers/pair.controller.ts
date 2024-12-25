@@ -113,7 +113,7 @@ class PairController {
         const data = await pairService.getUserAssets();
     
         if (!data.success && data?.data === "BALANCES_FETCH_ERROR") { 
-            return res.status(400).send({ success: false, data });
+            return res.status(400).send(data);
         }
             
         return res.status(200).send({ success: true, data: data.data });
