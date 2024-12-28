@@ -106,6 +106,9 @@ class PairController {
     async getUserAssets(req: Request, res: Response) {
         const errors = validationResult(req);
     
+        console.log('get user assets');
+        
+
         if (!errors.isEmpty()) {
             return res.status(400).send({ success: false, data: "Invalid data" });
         }

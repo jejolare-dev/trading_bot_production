@@ -153,7 +153,7 @@ class PairService {
     async getUserAssets() {
         try {
             const assets = await walletInstance.getBalances();
-
+            
             return { success: true, data: assets || [] }
         } catch (error: any) {
             return { success: false, data: error?.code }
