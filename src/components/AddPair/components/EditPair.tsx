@@ -35,8 +35,8 @@ const EditPair = ({
     debouncedPriceCheck,
     debouncedAmountCheck,
  }: CreatePairTypes) => {
-    const [amount, setAmount] = useState(new Decimal(updatedPair?.amount || ""));
-    const [price, setPrice] = useState(new Decimal(updatedPair?.price || ""));
+    const [amount, setAmount] = useState(updatedPair?.amount || "");
+    const [price, setPrice] = useState(updatedPair?.price || "");
 
     const onEditPair = async () => {
         if (!updatedPair) return;
@@ -44,8 +44,8 @@ const EditPair = ({
         try {
             const res = await PairApi.editPair({
                 id: updatedPair?.id, 
-                price: price.toString(),
-                amount: amount.toString(),
+                price,
+                amount,
                 type
             });
 
@@ -54,8 +54,8 @@ const EditPair = ({
                     if (it.id === updatedPair.id) {
                         return {
                             ...it,
-                            price: price.toString(),
-                            amount: amount.toString(),
+                            price,
+                            amount,
                             type
                         }
                     }
@@ -72,11 +72,11 @@ const EditPair = ({
     };
 
     useEffect(() => {
-        debouncedPriceCheck(price.toString());
+        debouncedPriceCheck(price);
     }, [price]);
 
     useEffect(() => {
-        debouncedAmountCheck(amount.toString());
+        debouncedAmountCheck(amount);
     }, [amount]);
 
     return (
@@ -88,7 +88,7 @@ const EditPair = ({
                         <span>Price</span>
                     </div>
                     <div className={styles.modal__textfield_input}>
-                        <input value={price.toString()} type="number" onChange={(e) => setPrice(new Decimal(e.target.value || 0))}/>
+                        <input value={price} type="number" onChange={(e) => setPrice(e.target.value)}/>
                         <span>{ updatedPair.baseCurrency }</span>
                     </div>
 
@@ -100,7 +100,7 @@ const EditPair = ({
                         <span>Amount</span>
                     </div>
                     <div className={styles.modal__textfield_input}>
-                        <input value={amount.toString()} type="number" onChange={(e) => setAmount(new Decimal(e.target.value || 0))}/>
+                        <input value={amount} type="number" onChange={(e) => setAmount(e.target.value)}/>
                         <span>{updatedPair.quoteCurrency}</span>
                     </div>
 
@@ -108,12 +108,12 @@ const EditPair = ({
                 </div>
                 <div className={styles.modal__pairInfo_item}>
                     <div className={styles.title}>
-                        {getAssetIcon(updatedPair.quoteCurrency)}
+                        {getAssetIcon(updatedPair.baseCurrency)}
                         <span>Total</span>
                     </div>
                     <div className={styles.info}>
-                        <p>{ amount.times(price).toString() }</p>
-                        <span>{ updatedPair.quoteCurrency }</span>
+                        <p>{ new Decimal(amount || 0).times(price || 0).toString() }</p>
+                        <span>{ updatedPair.baseCurrency }</span>
                     </div>
                 </div>
             </div>

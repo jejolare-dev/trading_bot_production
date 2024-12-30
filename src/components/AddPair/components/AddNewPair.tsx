@@ -42,8 +42,8 @@ const AddNewPair = ({
     debouncedAmountCheck,
 }: AddNewPairTypes) => {
     const [message, setMessage] = useState(pairUrl);
-    const [amount, setAmount] = useState(new Decimal("0"));
-    const [price, setPrice] = useState(new Decimal("0"));
+    const [amount, setAmount] = useState("");
+    const [price, setPrice] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isValidatingInput, setIsValidatingInput] = useState(false);
 
@@ -67,17 +67,27 @@ const AddNewPair = ({
                 if (res.success) {
                     const { rate, volume, first_currency, second_currency } = res.data;
 
-                    setPairUrl(url);
-                    setPairData({
-                        type: type || "buy",
-                        price: rate,
-                        amount: volume,
-                        active: true,
-                        baseCurrency: first_currency?.name,
-                        quoteCurrency: second_currency?.name,
-                    });
+                    if (rate && volume && first_currency && second_currency) {
+                        const baseCurrency = second_currency?.name.toLowerCase() === "zano" 
+                            ? second_currency 
+                            : first_currency;
+                        const quoteCurrency = second_currency?.name.toLowerCase() === baseCurrency?.name.toLowerCase()
+                            ? first_currency 
+                            : second_currency;
 
-                    setLastProcessedUrl(url);
+                        setPairUrl(url);
+                        setPairData({
+                            type: type || "buy",
+                            price: first_currency?.name === baseCurrency?.name ? volume : rate,
+                            amount: first_currency?.name === baseCurrency?.name ? rate : volume,
+                            active: true,
+                            baseCurrency: baseCurrency?.name,
+                            quoteCurrency: quoteCurrency?.name,
+                        });
+
+                        setLastProcessedUrl(url);
+                    }
+                    
                     setIsLoading(false);
                 }
             } catch (error) { 
@@ -116,8 +126,8 @@ const AddNewPair = ({
 
     useEffect(() => {
         if (pairData) {
-            setAmount(new Decimal(pairData.amount || 0));
-            setPrice(new Decimal(pairData.price || 0));
+            setAmount(pairData.amount);
+            setPrice(pairData.price);
         }
     }, [pairData]);
 
@@ -161,7 +171,7 @@ const AddNewPair = ({
                         <span>Price</span>
                     </div>
                     <div className={styles.modal__textfield_input}>
-                        <input value={price.toString()} type="number" onChange={(e) => setPrice(new Decimal(e.target.value || 0))}/>
+                        <input value={price} type="number" onChange={(e) => setPrice(e.target?.value || "")}/>
                         <span>{ pairData.baseCurrency }</span>
                     </div>
 
@@ -173,7 +183,7 @@ const AddNewPair = ({
                         <span>Amount</span>
                     </div>
                     <div className={styles.modal__textfield_input}>
-                        <input value={amount.toString()} type="number" onChange={(e) => setAmount(new Decimal(e.target.value || 0))}/>
+                        <input value={amount} type="number" onChange={(e) => setAmount(e.target.value)}/>
                         <span>{pairData.quoteCurrency}</span>
                     </div>
 
@@ -181,12 +191,12 @@ const AddNewPair = ({
                 </div>
                 <div className={styles.modal__pairInfo_item}>
                     <div className={styles.title}>
-                        {getAssetIcon(pairData.quoteCurrency)} 
+                        {getAssetIcon(pairData.baseCurrency)} 
                         <span>Total</span>
                     </div>
                     <div className={styles.info}>
-                        <p>{ amount.times(price).toString() }</p>
-                        <span>{ pairData.quoteCurrency }</span>
+                        <p>{ (new Decimal(amount || 0).times(price || 0)).toString() }</p>
+                        <span>{ pairData.baseCurrency }</span>
                     </div>
                 </div>
             </div>}

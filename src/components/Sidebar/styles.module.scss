@@ -83,6 +83,10 @@
     &_status {
       font-size: 14px;
       color: var(--green);
+
+      &_negative {
+        color: var(--red)
+      }
     }
   }
 
@@ -96,16 +100,17 @@
       gap: 6px;
       width: 100%;
 
-      p {
-        font-size: 14px;
-        font-weight: 450;
-      }
-
       span {
         font-size: 14px;
-        font-weight: 400;
+        font-weight: 450;
         color: var(--gray);
-        margin-left: auto;
+      }
+
+      &_asset {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 14px;
       }
     }
   }

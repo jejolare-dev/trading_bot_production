@@ -111,8 +111,8 @@ const Pairs = ({
                                     <td className={styles.num_item}>{idx + 1}</td>
                                     <td className={styles.order_item}><p>{e.baseCurrency} / {e.quoteCurrency} <span className={styles[e.orderType]}>{e.orderType}</span></p></td>
                                     <td className={classes(styles.type_item, styles[e.type])}><span>{e.type}</span></td>
-                                    <td className={styles.amount_item}><div>{getAssetIcon(e.baseCurrency)} <span>{e.amount}</span></div></td>
-                                    <td className={styles.price_item}><div>{getAssetIcon(e.quoteCurrency)} <span>{e.price}</span></div></td>
+                                    <td className={styles.amount_item}><div>{getAssetIcon(e.quoteCurrency)} <span>{e.amount}</span></div></td>
+                                    <td className={styles.price_item}><div>{getAssetIcon(e.baseCurrency)} <span>{e.price}</span></div></td>
                                     <td className={classes(styles.status_item, e.active && styles.active)}><span>{e.active ? "Active" : "Inactive"}</span></td>
 
                                     <td className={styles.actions_item}>

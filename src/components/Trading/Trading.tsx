@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./styles.module.scss";
 import Sidebar from "../Sidebar";
 import Header from "../Header";
@@ -9,15 +9,14 @@ import AddPair from "../AddPair";
 import Pair from "@/interfaces/Pair";
 import { Wallet } from "zano_web3/web";
 import { Asset } from "@/interfaces/Asset";
-import AuthApi from "@/api/AuthApi";
-import { logout } from "@/utils/utils";
-import { useRouter } from "next/navigation";
 import useTokenValidation from "@/hooks/useTokenValidation";
 
-const Trading = ({ initialPairs, walletData, assets }: { 
+const Trading = ({ initialPairs, walletData, assets, totalZanoUsd, zanoUsd24Change }: { 
     initialPairs: Pair[], 
     walletData: Wallet,
-    assets: Asset[]
+    assets: Asset[],
+    totalZanoUsd?: number,
+    zanoUsd24Change?: number,
 }) => {
     const [addPairModal, setAddPairModal] = useState(false);
     const [pairs, setPairs] = useState(initialPairs);
@@ -28,7 +27,12 @@ const Trading = ({ initialPairs, walletData, assets }: {
     return (
         <>
             {/* Left sidebar */}
-            <Sidebar walletData={walletData} assets={assets} />
+            <Sidebar 
+                walletData={walletData}
+                assets={assets} 
+                totalZanoUsd={totalZanoUsd}
+                zanoUsd24Change={zanoUsd24Change}
+                />
 
             {/* Right content */}
             <div className={styles.content}>

@@ -3,19 +3,26 @@ import React, { useState } from 'react';
 import styles from "./styles.module.scss";
 import Image from 'next/image';
 import CopyIcon from "@/assets/img/icons/copy.svg";
-import ZanoIcon from "@/assets/img/icons/zano.svg";
-import BanditIcon from "@/assets/img/icons/bandit.svg";
 import LogoutIcon from "@/assets/img/icons/logout.svg";
 import { classes, copyToClipboard } from '@/utils';
 import InfoIcon from '../UI/InfoIcon';
 import User from '@/interfaces/User';
 import { logout } from '@/utils/utils';
 import { Asset } from '@/interfaces/Asset';
-import TradeIcon from "@/assets/img/icons/trade_tsds.svg";
 import getAssetIcon from '../AssetIcon';
 
 // Trading page sidebar
-const Sidebar = ({ walletData, assets }: { walletData: User, assets: Asset[] }) => {
+const Sidebar = ({ 
+        walletData, 
+        assets,
+        totalZanoUsd,
+        zanoUsd24Change,
+    }: { 
+        walletData: User, 
+        assets: Asset[],  
+        totalZanoUsd?: number,
+        zanoUsd24Change?: number,
+    }) => {
     const [isCopied, setCopied] = useState(false);
 
     // On copy address
@@ -52,8 +59,10 @@ const Sidebar = ({ walletData, assets }: { walletData: User, assets: Asset[] }) 
                     <h5>Total Balance</h5>
                     <p>
                         <span className={styles.sidebar__balance_currency}>$</span>
-                        <span className={styles.sidebar__balance_total}>8 718,16</span>
-                        <span className={styles.sidebar__balance_status}>+18,42%</span>
+                        <span className={styles.sidebar__balance_total}>{ totalZanoUsd?.toFixed(2).toLocaleString() }</span>
+                        <span className={classes(styles.sidebar__balance_status,
+                            (Number(zanoUsd24Change) < 0) && styles.sidebar__balance_status_negative
+                        )}>{ zanoUsd24Change?.toFixed(2) }%</span>
                     </p>
                 </div>
 
@@ -61,9 +70,12 @@ const Sidebar = ({ walletData, assets }: { walletData: User, assets: Asset[] }) 
                     {
                         assets.map((asset, id) => (
                             <div key={id} className={styles.sidebar__coins_item}>
-                                {getAssetIcon(asset.ticker.toUpperCase())}
+                                <div>{getAssetIcon(asset.ticker.toUpperCase())}</div>
                                 
-                                <p>{asset.amount} {asset.ticker.toUpperCase()}</p>
+                                <div className={styles.sidebar__coins_item_asset}>
+                                    <span>{(Number(asset.amount).toFixed(6)).toLocaleString()}</span>
+                                    <span>{asset.ticker.toUpperCase()}</span>
+                                </div>
                                 <span>{}</span>
                             </div>
                         ))

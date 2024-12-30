@@ -1,6 +1,8 @@
 .pairs {
+  display: flex;
+  flex-direction: column;
   margin-top: 20px;
-  height: calc(100vh - 280px);
+  height: calc(100vh - 126px);
 
   &__header {
     display: flex;
