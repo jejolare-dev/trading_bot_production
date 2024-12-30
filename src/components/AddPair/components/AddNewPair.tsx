@@ -78,8 +78,8 @@ const AddNewPair = ({
                         setPairUrl(url);
                         setPairData({
                             type: type || "buy",
-                            price: first_currency?.name === baseCurrency?.name ? volume : rate,
-                            amount: first_currency?.name === baseCurrency?.name ? rate : volume,
+                            price: "",
+                            amount: "",
                             active: true,
                             baseCurrency: baseCurrency?.name,
                             quoteCurrency: quoteCurrency?.name,
@@ -123,13 +123,6 @@ const AddNewPair = ({
         setMessage(value);
         debouncedFetchPairData(value);
     };
-
-    useEffect(() => {
-        if (pairData) {
-            setAmount(pairData.amount);
-            setPrice(pairData.price);
-        }
-    }, [pairData]);
 
     useEffect(() => {
         debouncedPriceCheck(price.toString());
