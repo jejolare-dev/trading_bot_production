@@ -37,10 +37,7 @@ const server = http.createServer(app);
 
     app.use(express.json({ limit: '20000kb' }));
     app.use(express.static('./public'));
-    app.use(
-        '/node_modules/@mediapipe/selfie_segmentation',
-        express.static('./node_modules/@mediapipe/selfie_segmentation'),
-    );
+
     app.use(express.urlencoded({ extended: true }));
     app.use((req, res, next) => {
         res.setHeader('X-Frame-Options', 'SAMEORIGIN');
