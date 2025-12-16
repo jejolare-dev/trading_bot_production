@@ -1,14 +1,14 @@
-import Button from "@/components/UI/Button";
-import { getLastCopiedText } from "@/utils";
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
-import styles from "../styles.module.scss";
-import CloseIcon from "@/assets/img/icons/x.svg";
-import Pair, { AddPairData } from "@/interfaces/Pair";
-import { debounce, urlParser } from "@/utils/utils";
+import Button from '@/components/UI/Button';
+import { getLastCopiedText } from '@/utils';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import CloseIcon from '@/assets/img/icons/x.svg';
+import Pair, { AddPairData } from '@/interfaces/Pair';
+import { debounce, urlParser } from '@/utils/utils';
 import { Decimal } from 'decimal.js';
-import PairApi from "@/api/PairApi";
-import Preloader from "@/components/Preloader";
-import getAssetIcon from "@/components/AssetIcon";
+import PairApi from '@/api/PairApi';
+import Preloader from '@/components/Preloader';
+import getAssetIcon from '@/components/AssetIcon';
+import styles from '../styles.module.scss';
 
 interface AddNewPairTypes {
     type: string;
@@ -19,7 +19,7 @@ interface AddNewPairTypes {
     setLastProcessedUrl: Dispatch<SetStateAction<string>>;
     lastProcessedUrl: string;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
-    setPairs: Dispatch<SetStateAction<Pair[]>>,
+    setPairs: Dispatch<SetStateAction<Pair[]>>;
     priceStroke: string;
     amountStroke: string;
     debouncedPriceCheck: (price: string) => void;
@@ -27,11 +27,11 @@ interface AddNewPairTypes {
 }
 
 const AddNewPair = ({
-    type, 
-    pairData, 
+    type,
+    pairData,
     setPairData,
     setPairUrl,
-    pairUrl, 
+    pairUrl,
     setLastProcessedUrl,
     lastProcessedUrl,
     setIsOpen,
@@ -42,17 +42,10 @@ const AddNewPair = ({
     debouncedAmountCheck,
 }: AddNewPairTypes) => {
     const [message, setMessage] = useState(pairUrl);
-    const [amount, setAmount] = useState("");
-    const [price, setPrice] = useState("");
+    const [amount, setAmount] = useState('');
+    const [price, setPrice] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isValidatingInput, setIsValidatingInput] = useState(false);
-
-    const handleGetCopiedText = async () => {
-        const text = await getLastCopiedText();
-
-        setMessage(text);
-        debouncedFetchPairData(text);
-    };
 
     const fetchPairData = useCallback(
         async (url: string) => {
@@ -68,18 +61,20 @@ const AddNewPair = ({
                     const { rate, volume, first_currency, second_currency } = res.data;
 
                     if (rate && volume && first_currency && second_currency) {
-                        const baseCurrency = second_currency?.name.toLowerCase() === "zano" 
-                            ? second_currency 
-                            : first_currency;
-                        const quoteCurrency = second_currency?.name.toLowerCase() === baseCurrency?.name.toLowerCase()
-                            ? first_currency 
-                            : second_currency;
+                        const baseCurrency =
+                            second_currency?.name.toLowerCase() === 'zano'
+                                ? second_currency
+                                : first_currency;
+                        const quoteCurrency =
+                            second_currency?.name.toLowerCase() === baseCurrency?.name.toLowerCase()
+                                ? first_currency
+                                : second_currency;
 
                         setPairUrl(url);
                         setPairData({
-                            type: type || "buy",
-                            price: "",
-                            amount: "",
+                            type: type || 'buy',
+                            price: '',
+                            amount: '',
                             active: true,
                             baseCurrency: baseCurrency?.name,
                             quoteCurrency: quoteCurrency?.name,
@@ -87,17 +82,24 @@ const AddNewPair = ({
 
                         setLastProcessedUrl(url);
                     }
-                    
+
                     setIsLoading(false);
                 }
-            } catch (error) { 
+            } catch {
                 setIsLoading(false);
             }
         },
-        [lastProcessedUrl, setPairData, setLastProcessedUrl]
+        [lastProcessedUrl, setPairData, setLastProcessedUrl],
     );
 
     const debouncedFetchPairData = debounce(fetchPairData, 300);
+
+    const handleGetCopiedText = async () => {
+        const text = await getLastCopiedText();
+
+        setMessage(text);
+        debouncedFetchPairData(text);
+    };
 
     const onAdd = async () => {
         if (!pairData) return;
@@ -107,18 +109,20 @@ const AddNewPair = ({
                 ...pairData,
                 amount: amount.toString(),
                 price: price.toString(),
-                type
+                type,
             });
 
             if (res.success) {
                 setIsOpen(false);
-                setPairs(prev => [...prev, res.data]);
+                setPairs((prev) => [...prev, res.data]);
             }
-        } catch (error) {}
-    }
+        } catch {
+            return undefined;
+        }
+    };
 
     const onInput = async (event: React.FormEvent<HTMLInputElement>) => {
-        const value = event.currentTarget.value;
+        const { value } = event.currentTarget;
 
         setMessage(value);
         debouncedFetchPairData(value);
@@ -143,68 +147,93 @@ const AddNewPair = ({
                 <label htmlFor="zano-trade-url">Trading Pair URL</label>
 
                 <div className={styles.modal__textfield_input}>
-                    <input value={message} onInput={onInput} id="zano-trade-url" type="text" placeholder="Zano Trade URL..." />
-                    {message ?
-                        <button onClick={() => {
-                            setPairUrl("");
-                            setMessage("");
-                        }}><CloseIcon /></button>
-                        :
+                    <input
+                        value={message}
+                        onInput={onInput}
+                        id="zano-trade-url"
+                        type="text"
+                        placeholder="Zano Trade URL..."
+                    />
+                    {message ? (
+                        <button
+                            onClick={() => {
+                                setPairUrl('');
+                                setMessage('');
+                            }}
+                        >
+                            <CloseIcon />
+                        </button>
+                    ) : (
                         <button onClick={handleGetCopiedText}>Paste</button>
-                    }
+                    )}
                 </div>
 
                 {pairData && <p>The pair found!</p>}
             </div>
 
-            {pairData && !isLoading && <div className={styles.modal__pairInfo}>
-                <div className={styles.modal__pairInfo_item}>
-                    <div className={styles.title}>
-                        {getAssetIcon(pairData.baseCurrency)} 
-                        <span>Price</span>
-                    </div>
-                    <div className={styles.modal__textfield_input}>
-                        <input value={price} type="number" onChange={(e) => setPrice(e.target?.value || "")}/>
-                        <span>{ pairData.baseCurrency }</span>
-                    </div>
+            {pairData && !isLoading && (
+                <div className={styles.modal__pairInfo}>
+                    <div className={styles.modal__pairInfo_item}>
+                        <div className={styles.title}>
+                            {getAssetIcon(pairData.baseCurrency)}
+                            <span>Price</span>
+                        </div>
+                        <div className={styles.modal__textfield_input}>
+                            <input
+                                value={price}
+                                type="number"
+                                onChange={(e) => setPrice(e.target?.value || '')}
+                            />
+                            <span>{pairData.baseCurrency}</span>
+                        </div>
 
-                    {priceStroke && !isValidatingInput && (<span className={styles.stroke}>{priceStroke}</span>)}
-                </div>
-                <div className={styles.modal__pairInfo_item}>
-                    <div className={styles.title}>
-                        {getAssetIcon(pairData.quoteCurrency)} 
-                        <span>Amount</span>
+                        {priceStroke && !isValidatingInput && (
+                            <span className={styles.stroke}>{priceStroke}</span>
+                        )}
                     </div>
-                    <div className={styles.modal__textfield_input}>
-                        <input value={amount} type="number" onChange={(e) => setAmount(e.target.value)}/>
-                        <span>{pairData.quoteCurrency}</span>
-                    </div>
+                    <div className={styles.modal__pairInfo_item}>
+                        <div className={styles.title}>
+                            {getAssetIcon(pairData.quoteCurrency)}
+                            <span>Amount</span>
+                        </div>
+                        <div className={styles.modal__textfield_input}>
+                            <input
+                                value={amount}
+                                type="number"
+                                onChange={(e) => setAmount(e.target.value)}
+                            />
+                            <span>{pairData.quoteCurrency}</span>
+                        </div>
 
-                    {amountStroke && !isValidatingInput && (<span className={styles.stroke}>{amountStroke}</span>)}
-                </div>
-                <div className={styles.modal__pairInfo_item}>
-                    <div className={styles.title}>
-                        {getAssetIcon(pairData.baseCurrency)} 
-                        <span>Total</span>
+                        {amountStroke && !isValidatingInput && (
+                            <span className={styles.stroke}>{amountStroke}</span>
+                        )}
                     </div>
-                    <div className={styles.info}>
-                        <p>{ (new Decimal(amount || 0).times(price || 0)).toString() }</p>
-                        <span>{ pairData.baseCurrency }</span>
+                    <div className={styles.modal__pairInfo_item}>
+                        <div className={styles.title}>
+                            {getAssetIcon(pairData.baseCurrency)}
+                            <span>Total</span>
+                        </div>
+                        <div className={styles.info}>
+                            <p>{new Decimal(amount || 0).times(price || 0).toString()}</p>
+                            <span>{pairData.baseCurrency}</span>
+                        </div>
                     </div>
                 </div>
-            </div>}
+            )}
 
             {isLoading && <Preloader />}
 
-            <Button 
-                onClick={onAdd} 
-                className={styles.modal__btn} 
-                disabled={!pairUrl || Boolean(amountStroke || priceStroke)} 
-                width="100%">
-                    Add
+            <Button
+                onClick={onAdd}
+                className={styles.modal__btn}
+                disabled={!pairUrl || Boolean(amountStroke || priceStroke)}
+                width="100%"
+            >
+                Add
             </Button>
         </>
-    )
+    );
 };
 
 export default AddNewPair;

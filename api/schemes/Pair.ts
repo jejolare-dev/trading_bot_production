@@ -1,5 +1,5 @@
-import { Model, DataTypes } from "sequelize";
-import sequelize from "../sequelize";
+import { Model, DataTypes } from 'sequelize';
+import sequelize from '../sequelize';
 
 class Pair extends Model {
     declare readonly id: string;
@@ -16,49 +16,52 @@ class Pair extends Model {
     declare readonly updatedAt: Date;
 }
 
-Pair.init({
-    id: { 
-        type: DataTypes.UUID, 
-        primaryKey: true, 
-        defaultValue: DataTypes.UUIDV4
+Pair.init(
+    {
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4,
+        },
+        orderType: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        amount: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        price: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        active: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: false,
+        },
+        userId: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        baseCurrency: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        quoteCurrency: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     },
-    orderType: {
-        type: DataTypes.STRING,
-        allowNull: false,
+    {
+        sequelize,
+        modelName: 'pairs',
+        timestamps: true,
     },
-    type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    amount: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    price: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    active: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: false
-    },
-    userId: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    baseCurrency: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    quoteCurrency: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-}, {
-    sequelize,
-    modelName: 'pairs',
-    timestamps: true
-});
+);
 
 export default Pair;

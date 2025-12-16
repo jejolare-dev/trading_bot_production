@@ -1,36 +1,32 @@
-import styles from "./styles.module.scss";
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import Trading from "@/components/Trading/Trading";
-import axios from "axios";
-import { Asset } from "@/interfaces/Asset";
+import axios, { AxiosError } from 'axios';
+
+import Trading from '@/components/Trading/Trading';
+import { Asset } from '@/interfaces/Asset';
+import styles from './styles.module.scss';
 
 const TradingPage = async () => {
-    const { 
-        initialPairs, 
-        walletData, 
-        assets, 
-        totalZanoUsd, 
-        zanoUsd24Change 
-    } = await fetchInitialData();
+    const { initialPairs, walletData, assets, totalZanoUsd, zanoUsd24Change } =
+        await fetchInitialData();
 
     return (
         <main className={styles.container}>
-            <Trading 
-                initialPairs={initialPairs} 
-                walletData={walletData} 
-                assets={assets} 
+            <Trading
+                initialPairs={initialPairs}
+                walletData={walletData}
+                assets={assets}
                 totalZanoUsd={totalZanoUsd}
                 zanoUsd24Change={zanoUsd24Change}
-                />
+            />
         </main>
-    )
-}
+    );
+};
 
 export default TradingPage;
 
 async function fetchInitialData() {
-    const token = (await cookies()).get("token")?.value;
+    const token = (await cookies()).get('token')?.value;
 
     if (!token) {
         redirect('/');
@@ -40,66 +36,70 @@ async function fetchInitialData() {
     const walletData = await fetchWalletData(token);
     const assets = await fetchUserAssets(token);
 
-    if (!assets.success && assets?.data === "BALANCES_FETCH_ERROR") {
-        redirect("/incorrect-setup");
+    if (!assets.success && assets?.data === 'BALANCES_FETCH_ERROR') {
+        redirect('/incorrect-setup');
     }
 
     const rate = await fetchZanoRate();
-    const totalZano = assets?.data?.find((it: Asset) => it.name.toLowerCase() === "zano")?.amount;
+    const totalZano = assets?.data?.find((it: Asset) => it.name.toLowerCase() === 'zano')?.amount;
 
     return {
         initialPairs: userPairs?.success ? userPairs.data : [],
         walletData: walletData?.success ? walletData.data : null,
         assets: assets?.success ? assets.data : [],
-        totalZanoUsd: totalZano && rate ? totalZano * rate?.usd : undefined,
+        totalZanoUsd:
+            typeof totalZano === 'number' && typeof rate.usd === 'number'
+                ? totalZano * rate.usd
+                : undefined,
         zanoUsd24Change: rate ? rate?.usd_24h_change : undefined,
     };
 }
 
 async function fetchUserPairs(token: string) {
     try {
-        const response = await axios.post(
-            `http://127.0.0.1:3000/api/pair/get-user-pairs`,
-            { token }
-        );
+        const response = await axios.post(`http://127.0.0.1:3000/api/pair/get-user-pairs`, {
+            token,
+        });
 
         return response.data;
-    } catch (error) {
-        return;
+    } catch {
+        return undefined;
     }
 }
 
 async function fetchWalletData(token: string) {
     try {
-        const response = await axios.post(
-            `http://127.0.0.1:3000/api/user/get-user-info`,
-            { token }
-        );
+        const response = await axios.post(`http://127.0.0.1:3000/api/user/get-user-info`, {
+            token,
+        });
 
         return response.data;
-    } catch (error) {
-        return;
+    } catch {
+        return undefined;
     }
 }
 
 export async function fetchUserAssets(token: string) {
     try {
-        const response = await axios.post(
-            "http://127.0.0.1:3000/api/pair/get-user-assets", 
-            { token });
+        const response = await axios.post('http://127.0.0.1:3000/api/pair/get-user-assets', {
+            token,
+        });
 
         return response.data;
-    } catch (error: any) {
-        return error?.response?.data;
+    } catch (error) {
+        if (error instanceof AxiosError) {
+            return error.response?.data;
+        }
+        throw error;
     }
 }
 
 export async function fetchZanoRate() {
     try {
-        const response = await axios.get("https://explorer.zano.org/api/price");
+        const response = await axios.get('https://explorer.zano.org/api/price');
 
         return response?.data?.data?.zano;
-    } catch (error) {
-        return;
+    } catch {
+        return undefined;
     }
 }

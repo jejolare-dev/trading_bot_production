@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export interface InfoIconTypes {
     Icon: React.FC<React.SVGProps<SVGSVGElement>>;
