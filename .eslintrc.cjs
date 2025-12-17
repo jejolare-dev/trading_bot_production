@@ -10,9 +10,4 @@ module.exports = {
             },
         },
     },
-    rules: {
-        'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-        'no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
-        'no-unused-vars': 'off',
-    },
 };

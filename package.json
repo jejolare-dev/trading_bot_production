@@ -43,7 +43,7 @@
     "@types/react-dom": "^18",
     "cross-env": "^7.0.3",
     "eslint": "^8",
-    "eslint-config-jejolare": "^1.1.0",
+    "eslint-config-jejolare": "^3.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "typescript": "^5"
