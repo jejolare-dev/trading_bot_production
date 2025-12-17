@@ -1,8 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import Button from '../UI/Button';
-import styles from "./styles.module.scss";
-import InfoOutlineIcon from "@/assets/img/icons/info-outline.svg";
-import InfoIcon from '../UI/InfoIcon';
+import styles from './styles.module.scss';
 
 // Trading page header
 const Header = ({ setAddPairModal }: { setAddPairModal: Dispatch<SetStateAction<boolean>> }) => {
@@ -10,7 +8,9 @@ const Header = ({ setAddPairModal }: { setAddPairModal: Dispatch<SetStateAction<
         <header className={styles.header}>
             <div className={styles.header__top}>
                 <h1 className={styles.header__top_title}>Trading Bot</h1>
-                <Button onClick={() => setAddPairModal(true)} variant='success'>+ Add trading pair</Button>
+                <Button onClick={() => setAddPairModal(true)} variant="success">
+                    + Add trading pair
+                </Button>
             </div>
 
             {/* <div className={styles.header__info}>
@@ -35,7 +35,7 @@ const Header = ({ setAddPairModal }: { setAddPairModal: Dispatch<SetStateAction<
                 </div>
             </div> */}
         </header>
-    )
-}
+    );
+};
 
-export default Header
+export default Header;

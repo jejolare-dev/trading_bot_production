@@ -5,21 +5,22 @@ export function getCookie(name: string) {
 }
 
 export async function logout() {
-    document.cookie = "token=; expires=Sun, 20 Aug 2000 12:00:00 UTC";
+    document.cookie = 'token=; expires=Sun, 20 Aug 2000 12:00:00 UTC';
     await new Promise((resolve) => setTimeout(resolve, 100));
-    window.location.href = "/";
+    window.location.href = '/';
 }
 
 export function urlParser(message: string) {
-    const urlRegex = /https:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+    const urlRegex =
+        /https:\/\/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
     const urlMatch = message.match(urlRegex);
-    return  urlMatch?.length ? urlMatch[0] : null;
+    return urlMatch?.length ? urlMatch[0] : null;
 }
 
-export function debounce(func: (...args: any[]) => void, delay: number) {
-    let timeoutId: any;
+export function debounce(func: (...args: unknown[]) => void, delay: number) {
+    let timeoutId: NodeJS.Timeout;
 
-    return function (this: void, ...args: any[]) {
+    return function (this: void, ...args: unknown[]) {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
             func.apply(this, args);
@@ -28,13 +29,11 @@ export function debounce(func: (...args: any[]) => void, delay: number) {
 }
 
 export async function postFetch(path: string, body: object) {
-    return await fetch(path, {
-        method: "POST",
+    return fetch(path, {
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(
-            body
-        )
-    }).then(res => res.json());
+        body: JSON.stringify(body),
+    }).then((res) => res.json());
 }

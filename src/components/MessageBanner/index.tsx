@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import useTokenValidation from "@/hooks/useTokenValidation";
-import styles from "./styles.module.scss";
+import useTokenValidation from '@/hooks/useTokenValidation';
+import styles from './styles.module.scss';
 
 const MessageBanner = ({ message }: { message: string }) => {
     useTokenValidation();
@@ -10,7 +10,7 @@ const MessageBanner = ({ message }: { message: string }) => {
         <div className={styles.container}>
             <h1>{message}</h1>
         </div>
-    )
-}
+    );
+};
 
 export default MessageBanner;

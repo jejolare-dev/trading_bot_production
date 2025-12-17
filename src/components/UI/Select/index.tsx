@@ -1,8 +1,9 @@
-"use client";
-import { SelectType } from './types'
-import ArrowDown from "@/assets/img/icons/arrow-down.svg";
-import styles from "./styles.module.scss";
+'use client';
+
+import ArrowDown from '@/assets/img/icons/arrow-down.svg';
 import { classes } from '@/utils';
+import { SelectType } from './types';
+import styles from './styles.module.scss';
 
 // Custom select component
 const Select = ({ options, selected = options[0], setSelected, isDark = false }: SelectType) => {
@@ -17,14 +18,17 @@ const Select = ({ options, selected = options[0], setSelected, isDark = false }:
                     <label
                         onClick={() => setSelected(option)}
                         className={styles.select__dropdown_item}
-                        key={idx}>
-                        <span>{option.Icon && option.Icon} {option.name}</span>
-                        <input defaultChecked={selected == option} name='select' type="radio" />
+                        key={idx}
+                    >
+                        <span>
+                            {option.Icon && option.Icon} {option.name}
+                        </span>
+                        <input defaultChecked={selected === option} name="select" type="radio" />
                     </label>
                 ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Select
+export default Select;

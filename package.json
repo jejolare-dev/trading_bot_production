@@ -6,7 +6,12 @@
     "dev": "cross-env PORT=3000 nodemon --exec tsx ./api/server.ts",
     "build": "next build",
     "start": "cross-env NODE_ENV=production PORT=3000 tsx ./api/server.ts",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "eslint": "eslint . --ext .js,.ts,.tsx,.jsx,.cjs,.mjs --fix",
+    "type-check": "tsc --noEmit --incremental false"
   },
   "dependencies": {
     "@sequelize/sqlite3": "^7.0.0-alpha.43",
@@ -38,7 +43,15 @@
     "@types/react-dom": "^18",
     "cross-env": "^7.0.3",
     "eslint": "^8",
-    "eslint-config-next": "15.0.3",
+    "eslint-config-jejolare": "^3.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }

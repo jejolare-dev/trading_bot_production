@@ -1,6 +1,6 @@
-import { Model, DataTypes } from "sequelize";
-import sequelize from "../sequelize";
-import Pair from "./Pair";
+import { Model, DataTypes } from 'sequelize';
+import sequelize from '../sequelize';
+import Pair from './Pair';
 
 class User extends Model {
     declare readonly id: string;
@@ -11,28 +11,30 @@ class User extends Model {
     declare readonly updatedAt: Date;
 }
 
-User.init({
-    id: { 
-        type: DataTypes.UUID, 
-        primaryKey: true, 
-        defaultValue: DataTypes.UUIDV4
+User.init(
+    {
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4,
+        },
+        alias: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
+        address: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
     },
-    alias: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+    {
+        sequelize,
+        modelName: 'users',
+        timestamps: true,
     },
-    address: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-}, {
-    sequelize,
-    modelName: 'users',
-    timestamps: true
-});
-
+);
 
 User.hasMany(Pair, {
     foreignKey: 'userId',

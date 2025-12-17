@@ -1,6 +1,7 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import MessageBanner from "../MessageBanner";
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import MessageBanner from '../MessageBanner';
 
 // Device width checker
 const MobileNotAvailable: React.FC = () => {
@@ -11,7 +12,7 @@ const MobileNotAvailable: React.FC = () => {
     }, []);
 
     if (isMobile) {
-        return <MessageBanner message={"Trading bot is not available from mobile device!"} />
+        return <MessageBanner message={'Trading bot is not available from mobile device!'} />;
     }
 
     return <></>;

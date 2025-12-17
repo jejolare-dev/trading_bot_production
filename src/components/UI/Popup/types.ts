@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 interface PopupProps<T extends object = object> {
     Content: FC<{ close: () => void } & T>;

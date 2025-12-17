@@ -8,15 +8,15 @@ export default function Popup<ContentProps extends object>(props: PopupProps<Con
 
     function getPopupElement() {
         const PopupContent = props.Content;
-        return (
-            <PopupContent {...props.settings} close={props.close} />
-        );
+        return <PopupContent {...props.settings} close={props.close} />;
     }
 
     useEffect(() => {
         if (!props.scroll) return;
-        document.body.style.overflow = "hidden";
-        return () => { document.body.style.overflow = "auto"; };
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
     }, [props.scroll]);
 
     useEffect(() => {
@@ -40,10 +40,12 @@ export default function Popup<ContentProps extends object>(props: PopupProps<Con
             for (const className of props.classList) {
                 container.classList.add(className);
             }
-        };
+        }
         setPopupContainer(container);
         document.body.appendChild(container);
-        return () => { document.body.removeChild(container); };
+        return () => {
+            document.body.removeChild(container);
+        };
     }, [props.blur, props.scroll, props.noPointer, props.classList]);
 
     return popupContainer ? ReactDOM.createPortal(getPopupElement(), popupContainer) : <div></div>;

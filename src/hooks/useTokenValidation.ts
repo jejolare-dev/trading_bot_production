@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import AuthApi from "@/api/AuthApi";
-import { logout } from "@/utils/utils";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import AuthApi from '@/api/AuthApi';
+import { logout } from '@/utils/utils';
 
 const useTokenValidation = () => {
     const router = useRouter();
@@ -14,7 +14,7 @@ const useTokenValidation = () => {
                 if (!res?.data?.isValid) {
                     logout();
                 }
-            } catch (error) {
+            } catch {
                 logout();
             }
         };
