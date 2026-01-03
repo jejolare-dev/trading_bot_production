@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env PORT=3000 nodemon --exec tsx ./api/server.ts",
+    "dev": "nodemon --exec tsx ./api/server.ts",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production PORT=3000 tsx ./api/server.ts",
+    "start": "cross-env NODE_ENV=production tsx ./api/server.ts",
     "lint": "next lint",
     "prepare": "husky",
     "format": "prettier --write .",
