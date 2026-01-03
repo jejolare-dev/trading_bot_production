@@ -1,6 +1,6 @@
 module.exports = {
     // Or 'jejolare/backend' for Node.js app
-    extends: ['jejolare/frontend'],
+    extends: ['jejolare/backend'],
 
     // This is needed only if you use TypeScript
     settings: {
