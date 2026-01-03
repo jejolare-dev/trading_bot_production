@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 export function tryCatch(
-    fn: (req: Request, res: Response) => Promise<void>,
+    fn: (req: Request, res: Response) => Promise<unknown>,
     cleanup?: () => Promise<void>,
 ) {
     return async function (req: Request, res: Response) {

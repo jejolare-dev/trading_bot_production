@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-explicit-any: "warn" */
 import { validateTokensInput } from 'zano_web3/shared';
 import CreatePairBody from '../interfaces/bodies/pair/CreatePairBody';
 import DeletePairBody from '../interfaces/bodies/pair/DeletePairBody';
@@ -157,7 +158,8 @@ class PairService {
             const assets = await walletInstance.getBalances();
 
             return { success: true, data: assets || [] };
-        } catch (error) {
+            // eslint-warning @typescript-eslint/no-explicit-any
+        } catch (error: any) {
             return { success: false, data: error?.code };
         }
     }

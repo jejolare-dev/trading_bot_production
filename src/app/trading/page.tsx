@@ -41,7 +41,7 @@ async function fetchInitialData() {
     }
 
     const rate = await fetchZanoRate();
-    const totalZano = assets?.data?.find((it: Asset) => it.name.toLowerCase() === 'zano')?.amount;
+    const totalZano = assets?.data?.find?.((it: Asset) => it.name.toLowerCase() === 'zano')?.amount;
 
     return {
         initialPairs: userPairs?.success ? userPairs.data : [],

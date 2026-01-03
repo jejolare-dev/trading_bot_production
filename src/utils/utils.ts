@@ -17,10 +17,10 @@ export function urlParser(message: string) {
     return urlMatch?.length ? urlMatch[0] : null;
 }
 
-export function debounce(func: (...args: unknown[]) => void, delay: number) {
+export function debounce<T extends unknown[]>(func: (...args: T) => void, delay: number) {
     let timeoutId: NodeJS.Timeout;
 
-    return function (this: void, ...args: unknown[]) {
+    return function (this: void, ...args: T) {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
             func.apply(this, args);
