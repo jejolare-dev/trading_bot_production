@@ -14,7 +14,7 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./api/*"]
     }
   },
   "include": [
@@ -22,6 +22,7 @@
     "**/*.tsx",
     "./.eslintrc.cjs",
     "./prettier.config.mjs",
+    "**/*.d.ts"
   ],
   "exclude": ["node_modules"]
 }

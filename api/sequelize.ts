@@ -1,11 +1,9 @@
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import config from '@/config';
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: process.env.PATH_SQLITE || 'trading_bot.sqlite',
+    storage: config.sqliteDbPath,
     logging: false,
 });
 

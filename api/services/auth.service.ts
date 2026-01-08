@@ -1,16 +1,14 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import config from '@/config';
 import AuthData from '../interfaces/bodies/user/AuthData.js';
 import userModel from '../models/User.js';
 import walletInstance from '../utils/wallet.js';
-
-dotenv.config();
 
 class AuthService {
     private generateToken(payload: AuthData & { id: string }) {
         const { id, alias, address } = payload;
 
-        return jwt.sign({ id, address, alias }, process.env.JWT_SECRET || '', { expiresIn: '24h' });
+        return jwt.sign({ id, address, alias }, config.jwtSecret, { expiresIn: '24h' });
     }
 
     async auth(userData: AuthData) {
