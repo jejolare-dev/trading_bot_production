@@ -25,7 +25,8 @@
     "sequelize": "^6.37.5",
     "sequelize-typescript": "^2.1.6",
     "tsx": "^4.19.2",
-    "zano_web3": "^7.4.0"
+    "zano_web3": "^7.4.0",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -35,6 +36,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^8",
     "eslint-config-jejolare": "^3.0.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "typescript": "^5"
