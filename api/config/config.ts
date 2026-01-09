@@ -14,6 +14,7 @@ const rawEnvSchema = z.object({
     WALLET_URL: z.url().trim().default('http://127.0.0.1:11211/json_rpc'),
     WALLET_AUTH_TOKEN: z.string().trim().default(''),
     JWT_SECRET: z.string().min(1, 'JWT_SECRET is required'),
+    FRONTEND_SERVER_URL: z.url().trim(),
 });
 
 const env = rawEnvSchema.parse(process.env);
@@ -29,6 +30,7 @@ export const config = {
     walletUrl: env.WALLET_URL,
     walletAuthToken: env.WALLET_AUTH_TOKEN,
     jwtSecret: env.JWT_SECRET,
+    frontendServerUrl: env.FRONTEND_SERVER_URL,
 } as const;
 
 export type Config = typeof config;
