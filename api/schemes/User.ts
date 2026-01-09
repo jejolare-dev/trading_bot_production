@@ -32,6 +32,11 @@ User.init(
             allowNull: false,
             unique: true,
         },
+        wallet_id: {
+            type: DataTypes.UUID,
+            allowNull: true,
+            unique: true,
+        },
     },
     {
         sequelize,
@@ -49,10 +54,7 @@ User.hasMany(Pair, {
 });
 
 Wallet.hasOne(User, {
-    foreignKey: {
-        name: 'wallet_id',
-        allowNull: true,
-    },
+    foreignKey: 'wallet_id',
 });
 
 export default User;
