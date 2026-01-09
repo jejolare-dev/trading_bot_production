@@ -1,8 +1,9 @@
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
+
 import config from '@/config';
-import prepareDatabase from './prepareDatabase';
+import prepareDatabase from '@/database/prepareDatabase';
 import pairRouter from './routes/pair.route';
 import authRouter from './routes/auth.route';
 import userRouter from './routes/user.route';
