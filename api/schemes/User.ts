@@ -2,11 +2,14 @@ import { Model, DataTypes } from 'sequelize';
 
 import sequelize from '@/database/sequelize';
 import Pair from './Pair';
+import Wallet from './Wallet';
 
+// User is considered not completely registered until they have a Wallet associated with them.
 class User extends Model {
     declare readonly id: string;
     declare alias: string;
     declare address: string;
+    declare wallet_id: string | null;
 
     declare readonly createdAt: Date;
     declare readonly updatedAt: Date;
@@ -43,6 +46,13 @@ User.hasMany(Pair, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
     hooks: true,
+});
+
+Wallet.hasOne(User, {
+    foreignKey: {
+        name: 'wallet_id',
+        allowNull: true,
+    },
 });
 
 export default User;
