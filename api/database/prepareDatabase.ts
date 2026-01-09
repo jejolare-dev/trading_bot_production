@@ -1,4 +1,5 @@
 import config from '@/config';
+import logger from '@/logger';
 import sequelize from './sequelize';
 import initdb from './initdb';
 
@@ -8,10 +9,11 @@ async function prepareDatabase() {
         await sequelize.authenticate();
         await sequelize.sync();
 
-        console.log('Connection to PostgreSQL has been established successfully.');
-        console.log(`Database "${config.pgDatabase}" is ready.`);
+        logger.info('Connection to PostgreSQL has been established successfully.');
+        logger.info(`Database "${config.pgDatabase}" is ready.`);
     } catch (error) {
-        console.error('Unable to connect to the PostgreSQL database:', error);
+        logger.error('Unable to connect to the PostgreSQL database:');
+        logger.error(error);
         throw error;
     }
 }

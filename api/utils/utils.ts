@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+import logger from '@/logger';
+
 export function tryCatch(
     fn: (req: Request, res: Response) => Promise<unknown>,
     cleanup?: () => Promise<void>,
@@ -8,7 +10,7 @@ export function tryCatch(
         try {
             await fn(req, res);
         } catch (err) {
-            console.log(err);
+            logger.error(err);
             res.status(500).send({ success: false, data: 'Internal error' });
         } finally {
             if (cleanup) {
