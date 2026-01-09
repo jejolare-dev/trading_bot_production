@@ -5,8 +5,11 @@ dotenv.config();
 
 const rawEnvSchema = z.object({
     PORT: z.coerce.number().int().positive().default(3000),
-    SQLITE_DB_PATH: z.string().trim().default('trading_bot.sqlite'),
-    PATH_SQLITE: z.string().trim().default('trading_bot.sqlite'),
+    PGUSER: z.string().trim(),
+    PGHOST: z.string().trim(),
+    PGPORT: z.coerce.number().int().max(65535),
+    PGDATABASE: z.string().trim(),
+    PGPASSWORD: z.string().trim(),
     DAEMON_URL: z.url().trim().default('http://127.0.0.1:11211/json_rpc'),
     WALLET_URL: z.url().trim().default('http://127.0.0.1:11211/json_rpc'),
     WALLET_AUTH_TOKEN: z.string().trim().default(''),
@@ -17,8 +20,11 @@ const env = rawEnvSchema.parse(process.env);
 
 export const config = {
     port: env.PORT,
-    sqliteDbPath: env.SQLITE_DB_PATH,
-    pathSqlite: env.PATH_SQLITE,
+    pgUser: env.PGUSER,
+    pgHost: env.PGHOST,
+    pgPort: env.PGPORT,
+    pgDatabase: env.PGDATABASE,
+    pgPassword: env.PGPASSWORD,
     daemonUrl: env.DAEMON_URL,
     walletUrl: env.WALLET_URL,
     walletAuthToken: env.WALLET_AUTH_TOKEN,

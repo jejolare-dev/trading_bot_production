@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
-import sequelize from '../sequelize';
+
+import sequelize from '@/database/sequelize';
 
 class Pair extends Model {
     declare readonly id: string;
@@ -40,12 +41,12 @@ Pair.init(
             allowNull: false,
         },
         active: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
         },
         userId: {
-            type: DataTypes.STRING,
+            type: DataTypes.UUID,
             allowNull: false,
         },
         baseCurrency: {

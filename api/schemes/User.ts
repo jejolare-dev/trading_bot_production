@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
-import sequelize from '../sequelize';
+
+import sequelize from '@/database/sequelize';
 import Pair from './Pair';
 
 class User extends Model {
