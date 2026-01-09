@@ -7,6 +7,7 @@ import prepareDatabase from '@/database/prepareDatabase';
 import pairRouter from './routes/pair.route';
 import authRouter from './routes/auth.route';
 import userRouter from './routes/user.route';
+import logger from './logger';
 
 const app = express();
 const server = http.createServer(app);
@@ -29,5 +30,5 @@ const server = http.createServer(app);
     });
     app.use('/api', [pairRouter, authRouter, userRouter]);
 
-    server.listen(config.port, () => console.log(`Server is running on port ${config.port}`));
+    server.listen(config.port, () => logger.info(`Server is running on port ${config.port}`));
 })();

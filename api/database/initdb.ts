@@ -1,6 +1,7 @@
 import pg from 'pg';
 
 import config from '@/config';
+import logger from '@/logger';
 
 async function initdb() {
     const pool = new pg.Pool({
@@ -23,7 +24,7 @@ async function initdb() {
             'code' in error &&
             error.code === '42P04'
         ) {
-            console.log('Database already exists, skipping creation');
+            logger.info('Database already exists, skipping creation');
         } else {
             throw error;
         }

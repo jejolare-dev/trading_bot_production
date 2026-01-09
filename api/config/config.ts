@@ -15,6 +15,8 @@ const rawEnvSchema = z.object({
     WALLET_AUTH_TOKEN: z.string().trim().default(''),
     JWT_SECRET: z.string().min(1, 'JWT_SECRET is required'),
     FRONTEND_SERVER_URL: z.url().trim(),
+    LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal']).default('info'),
+    NODE_ENV: z.string().optional(),
 });
 
 const env = rawEnvSchema.parse(process.env);
@@ -31,6 +33,8 @@ export const config = {
     walletAuthToken: env.WALLET_AUTH_TOKEN,
     jwtSecret: env.JWT_SECRET,
     frontendServerUrl: env.FRONTEND_SERVER_URL,
+    logLevel: env.LOG_LEVEL,
+    nodeEnv: env.NODE_ENV,
 } as const;
 
 export type Config = typeof config;
