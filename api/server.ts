@@ -14,24 +14,13 @@ const server = http.createServer(app);
 (async () => {
     await prepareDatabase();
 
-    const corsOptions = {
-        origin: (
-            origin: string | undefined,
-            callback: (err: Error | null, allow?: boolean) => void,
-        ) => {
-            if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        credentials: true,
-    };
-
-    app.use(cors(corsOptions));
+    app.use(
+        cors({
+            origin: config.frontendServerUrl,
+        }),
+    );
 
     app.use(express.json({ limit: '20000kb' }));
-    app.use(express.static('./public'));
 
     app.use(express.urlencoded({ extended: true }));
     app.use((req, res, next) => {
