@@ -1,4 +1,4 @@
-import { ServerResponse } from '@/interfaces/response-typing';
+import { ServerResponse, ValidateErrorSubType } from '@/interfaces/response-typing';
 import { GetServerError } from '@/interfaces/responses/shared';
 
 type DemoEndpointResult = {
@@ -10,16 +10,18 @@ const enum DemoEndpointErrorCodes {
     OTHER_ERROR = 'OTHER_ERROR',
 }
 
-type DemoEndpointErrorType = GetServerError<
-    | {
-          errorCode: DemoEndpointErrorCodes.GENERIC_ERROR;
-          details: {
-              info: string;
-          };
-      }
-    | {
-          errorCode: DemoEndpointErrorCodes.OTHER_ERROR;
-      }
+type DemoEndpointErrorType = ValidateErrorSubType<
+    GetServerError<
+        | {
+              errorCode: DemoEndpointErrorCodes.GENERIC_ERROR;
+              details: {
+                  info: string;
+              };
+          }
+        | {
+              errorCode: DemoEndpointErrorCodes.OTHER_ERROR;
+          }
+    >
 >;
 
 export type DemoEndpointResponse = ServerResponse<DemoEndpointResult, DemoEndpointErrorType>;
