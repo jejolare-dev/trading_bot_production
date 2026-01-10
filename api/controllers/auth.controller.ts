@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+
+import { CreateTradeWalletBodyDTO } from '@/validators/auth/create-trade-wallet.validator.js';
 import AuthData from '../interfaces/bodies/user/AuthData.js';
 import authService from '../services/auth.service.js';
 import verifyUserData from '../jwt/verifyUserToken.js';
@@ -36,6 +38,10 @@ class AuthController {
 
         return res.status(200).send({ success: true, data: { isValid: true } });
     }
+
+    createTradeWallet = async (req: Request, res: Response) => {
+        const body = req.body as CreateTradeWalletBodyDTO;
+    };
 }
 
 const authController = new AuthController();

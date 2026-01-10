@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import config from '@/config';
-import UserData from '../interfaces/common/UserData';
+import { UserTokenPayload } from '@/interfaces/common/UserData';
 
-function verifyUserData(token: string): UserData | undefined {
+function verifyUserData(token: string): UserTokenPayload | undefined {
     try {
-        return jwt.verify(token, config.jwtSecret) as UserData;
+        return jwt.verify(token, config.jwtSecret) as UserTokenPayload;
     } catch {
         return undefined;
     }
