@@ -1,5 +1,9 @@
-export type ErrorResponse<T extends string = string, K = unknown> = {
+export type ErrorType = {
+    errorCode: string;
+    details?: unknown;
+};
+
+export type ErrorResponse<T extends ErrorType = ErrorType> = {
     success: false;
-    errorCode: T;
-    details: K;
+    error: T;
 };

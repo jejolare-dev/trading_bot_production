@@ -1,6 +1,6 @@
 import { SuccessResponse } from './success-response';
-import { ErrorResponse } from './error-response';
+import { ErrorResponse, ErrorType } from './error-response';
 
-export type Response<T = unknown, K extends string = string, L = unknown> =
+export type ServerResponse<T = unknown, K extends ErrorType = ErrorType> =
     | SuccessResponse<T>
-    | ErrorResponse<K, L>;
+    | ErrorResponse<K>;
